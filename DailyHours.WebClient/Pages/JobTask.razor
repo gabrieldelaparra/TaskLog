@@ -1,7 +1,44 @@
-﻿<li class="draggable" draggable="true" title="@ProjectTask.Name" @ondragstart="@(() => HandleDragStart(ProjectTask))">
-    <p class="description">@ProjectTask.Name</p>
-    <p class="last-updated"><small>Last Updated</small> @ProjectTask.LastUpdated.ToString("HH:mm.ss tt")</p>
-</li>
+﻿<style>
+    input {
+        background-color: transparent;
+        border: 0px solid;
+    }
+
+    .draggable {
+        cursor: grab;
+    }
+
+        .draggable:active {
+            cursor: grabbing;
+        }
+
+    .dragging {
+        cursor: grabbing;
+    }
+</style>
+
+<div class="card mb-2" style="width: 18rem;">
+    <div class="card-body p-0">
+        <div class="card-header px-3 py-2">
+            <span class="oi oi-move draggable" draggable="true" @ondragstart="@(() => HandleDragStart(ProjectTask))"></span>
+            <input @bind="ProjectTask.Name" placeholder="Task name">
+        </div>
+        <div class="card-body p-1">
+            <div class="input-group mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Hours:</span>
+                </div>
+                <input type="text" class="form-control" @bind="ProjectTask.Hours">
+            </div>
+            @*<div class="input-group mb-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Date:</span>
+                    </div>
+                    <input type="date" class="form-control" @bind="ProjectTask.DateTime" @bind:format="yyyy-MM-dd">
+                </div>*@
+        </div>
+    </div>
+</div>
 
 @code {
     [CascadingParameter] JobContainer Container { get; set; }
