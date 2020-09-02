@@ -8,35 +8,49 @@
         cursor: grab;
     }
 
-        .draggable:active {
-            cursor: grabbing;
-        }
+    .draggable:active {
+        cursor: grabbing;
+    }
 
     .dragging {
         cursor: grabbing;
     }
+
+    .al-cnt{
+        align-items: center;
+    }
 </style>
 
-<div class="card mb-2" style="width: 18rem;">
-    <div class="card-body p-0">
-        <div class="card-header px-3 py-2">
-            <span class="oi oi-move draggable" draggable="true" @ondragstart="@(() => HandleDragStart(ProjectTask))"></span>
-            <input @bind="ProjectTask.Name" placeholder="Task name">
-        </div>
-        <div class="card-body p-1">
-            <div class="input-group mb-1">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Hours:</span>
-                </div>
-                <input type="text" class="form-control" @bind="ProjectTask.Hours">
+
+<div class="border rounded m-2 px-1" style="width: 16rem;">
+
+    <!-- Drag, Clock/Hours, Badge -->
+    <div class="d-inline-flex al-cnt">
+        <!-- Drag -->
+        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@(() => HandleDragStart(ProjectTask))"></span>
+
+        <!-- Clock/Hours -->
+        <div class="input-group input-group-sm mt-1">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="oi oi-clock"></i>
+                </span>
             </div>
-            @*<div class="input-group mb-0">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Date:</span>
-                    </div>
-                    <input type="date" class="form-control" @bind="ProjectTask.DateTime" @bind:format="yyyy-MM-dd">
-                </div>*@
+            <input type="number" class="form-control" @bind="ProjectTask.Hours" placeholder="2">
         </div>
+
+        <!-- Badge -->
+        <div>
+            <button type="button" class="badge badge-light float-right mx-2 mt-1">Normal</button>
+        </div>
+
+    </div>
+  
+    <!-- Task Element -->
+    <div class="text-truncate text-right">
+        <small>
+            (22541-A-21000-260) Amazon Askar SW Tasks to do some day
+        </small>
     </div>
 </div>
 
