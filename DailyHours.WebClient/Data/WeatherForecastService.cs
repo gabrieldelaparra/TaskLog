@@ -9,7 +9,7 @@ namespace DailyHours.WebClient.Data
     public class WeatherForecastService
     {
         Calendar calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
-
+        private int id = 0;
         public List<ProjectTask> GetWeekProjectTasks(IEnumerable<ProjectTask> tasks, int calendarWeek)
         {
             return tasks.Where(x => calendar.GetWeekOfYear(x.DateTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday).Equals(calendarWeek)).ToList();
@@ -47,6 +47,7 @@ namespace DailyHours.WebClient.Data
         {
             return new ProjectTask()
             {
+                Id = id++,
                 Name = $"Task {_rng.Next(0, 55)}",
                 Hours = (double)(_rng.Next(0, 6)) / 2,
                 DateTime = taskTime,

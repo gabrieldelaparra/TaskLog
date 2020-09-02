@@ -1,6 +1,10 @@
-﻿<Dropzone Items="ProjectTasks">
-    <TaskView ProjectTask="@context"></TaskView>
-</Dropzone>
+﻿@if (ProjectTasks != null)
+{
+    @foreach (var task in ProjectTasks)
+    {
+        <TaskView ProjectTask="@task" />
+    }
+}
 
 @code {
     [Parameter]

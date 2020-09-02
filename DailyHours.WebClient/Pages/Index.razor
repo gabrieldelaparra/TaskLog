@@ -1,8 +1,24 @@
 ﻿@page "/"
 @using System.Globalization
 @inject WeatherForecastService ForecastService
+@*<WeekView CalendarWeek="calendarWeek" ProjectTasks="ProjectTasks"></WeekView>*@
 
-<WeekView CalendarWeek="calendarWeek" ProjectTasks="ProjectTasks"></WeekView>
+<JobContainer Jobs="Jobs" OnStatusUpdated="HandleStatusUpdated">
+    <JobDayList ShortDateString="@DateTime.Now.AddDays(-2).ToShortDateString()" />
+    <JobDayList ShortDateString="@DateTime.Now.AddDays(-1).ToShortDateString()" />
+    <JobDayList ShortDateString="@DateTime.Now.ToShortDateString()" />
+    <JobDayList ShortDateString="@DateTime.Now.AddDays(1).ToShortDateString()" />
+    <JobDayList ShortDateString="@DateTime.Now.AddDays(2).ToShortDateString()" />
+</JobContainer>
+
+<hr />
+<p>Last updated job was: <strong>@lastUpdatedJob</strong></p>
+<hr />
+
+@foreach (var task in Jobs)
+{
+    <p>@task.Name - <strong>@task.Hours</strong></p>
+}
 
 @code {
     int calendarWeek;
@@ -18,5 +34,23 @@
         tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(+5)));
         tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(+2)));
         ProjectTasks = tasks.ToList();
+        Jobs = tasks.ToList();
+    }
+
+    List<ProjectTask> Jobs = new List<ProjectTask>();
+    string lastUpdatedJob = "";
+
+    //protected override void OnInitialized()
+    //{
+    //    Jobs.Add(new JobModel { Id = 1, Description = "Mow the lawn", Status = JobStatuses.Todo, LastUpdated = DateTime.Now });
+    //    Jobs.Add(new JobModel { Id = 2, Description = "Go to the gym", Status = JobStatuses.Todo, LastUpdated = DateTime.Now });
+    //    Jobs.Add(new JobModel { Id = 3, Description = "Call Ollie", Status = JobStatuses.Todo, LastUpdated = DateTime.Now });
+    //    Jobs.Add(new JobModel { Id = 4, Description = "Fix bike tyre", Status = JobStatuses.Todo, LastUpdated = DateTime.Now });
+    //    Jobs.Add(new JobModel { Id = 5, Description = "Finish blog post", Status = JobStatuses.Todo, LastUpdated = DateTime.Now });
+    //}
+
+    void HandleStatusUpdated(ProjectTask updatedJob)
+    {
+        lastUpdatedJob = updatedJob.Name;
     }
 }
