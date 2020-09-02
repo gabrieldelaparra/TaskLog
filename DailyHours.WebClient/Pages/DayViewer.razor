@@ -1,0 +1,12 @@
+﻿@if (ProjectTasks != null)
+{
+    @foreach (var task in ProjectTasks)
+    {
+        <TaskView ProjectTask="@task" />
+    }
+}
+
+@code {
+    [Parameter]
+    public ProjectTask[] ProjectTasks { get; set; }
+}

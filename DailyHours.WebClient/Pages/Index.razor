@@ -1,0 +1,34 @@
+﻿@page "/"
+@inject WeatherForecastService ForecastService
+
+<style>
+    .equal .span2 {
+        width: 17.9%;
+    }
+</style>
+
+<div class="row">
+    @foreach (var dayTasks in ProjectTasks.GroupBy(x => x.DateTime.ToShortDateString()))
+    {
+        <div class="col">
+            <DayViewer ProjectTasks="@dayTasks.ToArray()"></DayViewer>
+        </div>
+    }
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col"></div>
+</div>
+
+@code {
+    ProjectTask[] ProjectTasks { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var tasks = new List<ProjectTask>();
+        tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now));
+        tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(-1)));
+        ProjectTasks = tasks.ToArray();
+    }
+
+
+}
