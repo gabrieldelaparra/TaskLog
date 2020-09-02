@@ -6,7 +6,7 @@
 
 @code {
     int calendarWeek;
-    ProjectTask[] ProjectTasks { get; set; }
+    List<ProjectTask> ProjectTasks { get; set; }
 
     protected override void OnInitialized()
     {
@@ -15,6 +15,8 @@
         var tasks = new List<ProjectTask>();
         tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now));
         tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(-1)));
-        ProjectTasks = tasks.ToArray();
+        tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(+5)));
+        tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(+2)));
+        ProjectTasks = tasks.ToList();
     }
 }

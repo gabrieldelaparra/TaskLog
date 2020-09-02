@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -6,6 +8,18 @@ namespace DailyHours.WebClient.Data
 {
     public class WeatherForecastService
     {
+        Calendar calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
+
+        public List<ProjectTask> GetWeekProjectTasks(IEnumerable<ProjectTask> tasks, int calendarWeek)
+        {
+            return tasks.Where(x => calendar.GetWeekOfYear(x.DateTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday).Equals(calendarWeek)).ToList();
+        }
+
+        public int GetCurrentCalendarWeek()
+        {
+            return calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+        }
+
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"

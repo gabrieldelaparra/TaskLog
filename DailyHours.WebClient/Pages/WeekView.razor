@@ -1,23 +1,21 @@
-﻿@using System.Globalization
-@inject WeatherForecastService ForecastService
-
+﻿@inject WeatherForecastService ForecastService
 @* TODO: Add Calendar Week*@
 <div class="row">
     @* TODO: Add Calendar Days*@
     <div class="col">
-        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Monday).ToArray()"></DayViewer>
+        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Monday).ToList()"></DayViewer>
     </div>
     <div class="col">
-        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Tuesday).ToArray()"></DayViewer>
+        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Tuesday).ToList()"></DayViewer>
     </div>
     <div class="col">
-        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Wednesday).ToArray()"></DayViewer>
+        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Wednesday).ToList()"></DayViewer>
     </div>
     <div class="col">
-        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Thursday).ToArray()"></DayViewer>
+        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Thursday).ToList()"></DayViewer>
     </div>
     <div class="col">
-        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Friday).ToArray()"></DayViewer>
+        <DayViewer ProjectTasks="@WeekTasks.Where(x => x.DateTime.DayOfWeek == DayOfWeek.Friday).ToList()"></DayViewer>
     </div>
 </div>
 
@@ -26,17 +24,15 @@
     public int CalendarWeek { get; set; }
 
     [Parameter]
-    public ProjectTask[] ProjectTasks { get; set; }
+    public List<ProjectTask> ProjectTasks { get; set; }
 
-    private ProjectTask[] WeekTasks { get; set; }
+    private List<ProjectTask> WeekTasks { get; set; }
 
     protected override void OnInitialized()
     {
-        var calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
-
         if (CalendarWeek.Equals(0))
-            CalendarWeek = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            CalendarWeek = ForecastService.GetCurrentCalendarWeek();
 
-        WeekTasks = ProjectTasks.Where(x => calendar.GetWeekOfYear(x.DateTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday) == CalendarWeek).ToArray();
+        WeekTasks = ForecastService.GetWeekProjectTasks(ProjectTasks, CalendarWeek);
     }
 }

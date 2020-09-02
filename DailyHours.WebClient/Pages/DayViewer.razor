@@ -1,12 +1,8 @@
-﻿@if (ProjectTasks != null)
-{
-    @foreach (var task in ProjectTasks)
-    {
-        <TaskView ProjectTask="@task" />
-    }
-}
+﻿<Dropzone Items="ProjectTasks">
+    <TaskView ProjectTask="@context"></TaskView>
+</Dropzone>
 
 @code {
     [Parameter]
-    public ProjectTask[] ProjectTasks { get; set; }
+    public List<ProjectTask> ProjectTasks { get; set; }
 }

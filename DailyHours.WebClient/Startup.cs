@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DailyHours.WebClient.Data;
+using Plk.Blazor.DragDrop;
 
 namespace DailyHours.WebClient
 {
@@ -29,6 +30,7 @@ namespace DailyHours.WebClient
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddBlazorDragDrop();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
