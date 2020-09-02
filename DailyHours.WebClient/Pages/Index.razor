@@ -1,34 +1,20 @@
 ﻿@page "/"
+@using System.Globalization
 @inject WeatherForecastService ForecastService
 
-<style>
-    .equal .span2 {
-        width: 17.9%;
-    }
-</style>
-
-<div class="row">
-    @foreach (var dayTasks in ProjectTasks.GroupBy(x => x.DateTime.ToShortDateString()))
-    {
-        <div class="col">
-            <DayViewer ProjectTasks="@dayTasks.ToArray()"></DayViewer>
-        </div>
-    }
-    <div class="col"></div>
-    <div class="col"></div>
-    <div class="col"></div>
-</div>
+<WeekView CalendarWeek="calendarWeek" ProjectTasks="ProjectTasks"></WeekView>
 
 @code {
+    int calendarWeek;
     ProjectTask[] ProjectTasks { get; set; }
 
     protected override void OnInitialized()
     {
+        var calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
+        calendarWeek = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         var tasks = new List<ProjectTask>();
         tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now));
         tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(-1)));
         ProjectTasks = tasks.ToArray();
     }
-
-
 }
