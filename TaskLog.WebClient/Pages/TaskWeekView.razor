@@ -12,11 +12,11 @@
 </div>
 
 @code {
-    [Parameter] public List<TaskInstance> Tasks { get; set; }
+    [Parameter] public List<JobTask> Tasks { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public EventCallback<TaskInstance> OnStatusUpdated { get; set; }
+    [Parameter] public EventCallback<JobTask> OnStatusUpdated { get; set; }
 
-    public TaskInstance Payload { get; set; }
+    public JobTask Payload { get; set; }
 
     public async Task UpdateJobAsync(string newStatus)
     {

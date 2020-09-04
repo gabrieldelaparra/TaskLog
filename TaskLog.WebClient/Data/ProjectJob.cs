@@ -1,6 +1,6 @@
 ﻿namespace TaskLog.WebClient.Data
 {
-    public class TaskClass
+    public class ProjectJob
     {
         public int Id { get; set; }
         public string Code { get; set; }

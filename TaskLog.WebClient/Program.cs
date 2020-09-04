@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TaskLog.WebClient.Data;
 
 namespace TaskLog.WebClient
 {
@@ -16,6 +17,7 @@ namespace TaskLog.WebClient
     {
         public static void Main(string[] args)
         {
+            WeatherForecastService.LoadJobs();
             CreateHostBuilder(args).Build().Run();
         }
 

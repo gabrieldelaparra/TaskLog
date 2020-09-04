@@ -27,13 +27,13 @@
 
 
 <div class="border rounded m-2 px-1" style=" width: 16rem;
-        background: @Task.TaskClass.DefaultColor;
+        background: @JobTask.ProjectJob.DefaultColor;
 ">
 
     <!-- Drag, Clock/Hours, Badge -->
     <div class="d-inline-flex al-cnt">
         <!-- Drag -->
-        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@(() => HandleDragStart(Task))"></span>
+        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@(() => HandleDragStart(JobTask))"></span>
 
         <!-- Clock/Hours -->
         <div class="input-group input-group-sm mt-1">
@@ -47,7 +47,7 @@
 
         <!-- Badge -->
         <div>
-            <button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1" style="border:0" @onclick="RollBadge">@Task.TaskType.ToString()</button>
+            <button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1" style="border:0" @onclick="RollBadge">@JobTask.TaskType.ToString()</button>
         </div>
 
     </div>
@@ -55,28 +55,28 @@
     <!-- Task Element -->
     <div class="text-truncate">
         <small>
-            @Task.TaskClass.ToString()
+            @JobTask.ProjectJob.ToString()
         </small>
     </div>
 </div>
 
 @code {
     [CascadingParameter] TaskWeekView TaskWeek { get; set; }
-    [Parameter] public TaskInstance Task { get; set; }
+    [Parameter] public JobTask JobTask { get; set; }
 
     private string BadgeStyle
     {
         get
         {
-            if (Task.TaskType == TaskType.Error)
+            if (JobTask.TaskType == TaskType.Error)
                 return "danger";
-            if (Task.TaskType == TaskType.Normal)
+            if (JobTask.TaskType == TaskType.Normal)
                 return "light";
-            if (Task.TaskType == TaskType.Other)
+            if (JobTask.TaskType == TaskType.Other)
                 return "secondary";
-            if (Task.TaskType == TaskType.Rework)
+            if (JobTask.TaskType == TaskType.Rework)
                 return "warning";
-            if (Task.TaskType == TaskType.Tools)
+            if (JobTask.TaskType == TaskType.Tools)
                 return "info";
             return "light";
         }
@@ -84,9 +84,9 @@
 
     public double Hours
     {
-        get => Task.Hours;
+        get => JobTask.Hours;
         set {
-            Task.Hours = value;
+            JobTask.Hours = value;
             OnHoursChanged.Invoke();
         }
     }
@@ -95,11 +95,11 @@
 
     public void RollBadge()
     {
-        var currentIndex = (int)Task.TaskType;
-        Task.TaskType = (TaskType)(++currentIndex % 5);
+        var currentIndex = (int)JobTask.TaskType;
+        JobTask.TaskType = (TaskType)(++currentIndex % 5);
     }
 
-    private void HandleDragStart(TaskInstance selectedJob)
+    private void HandleDragStart(JobTask selectedJob)
     {
         TaskWeek.Payload = selectedJob;
     }

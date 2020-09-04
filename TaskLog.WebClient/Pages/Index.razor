@@ -21,22 +21,24 @@
 
 @code {
     int calendarWeek;
-    List<TaskInstance> ProjectTasks { get; set; }
+    List<JobTask> ProjectTasks { get; set; }
 
     protected override void OnInitialized()
     {
         var calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
         calendarWeek = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-        var tasks = new List<TaskInstance>();
-        tasks.AddRange(ForecastService.GetTaskInstances(DateTime.Now));
-        tasks.AddRange(ForecastService.GetTaskInstances(DateTime.Now.AddDays(-1)));
-        tasks.AddRange(ForecastService.GetTaskInstances(DateTime.Now.AddDays(+5)));
-        tasks.AddRange(ForecastService.GetTaskInstances(DateTime.Now.AddDays(+2)));
+        var tasks = new List<JobTask>();
+        tasks.AddRange(ForecastService.GetJobTasks(DateTime.Now));
+        tasks.AddRange(ForecastService.GetJobTasks(DateTime.Now.AddDays(-1)));
+        tasks.AddRange(ForecastService.GetJobTasks(DateTime.Now.AddDays(+5)));
+        tasks.AddRange(ForecastService.GetJobTasks(DateTime.Now.AddDays(+2)));
         ProjectTasks = tasks.ToList();
         Tasks = tasks.ToList();
+
+        WeatherForecastService.SaveJobs(WeatherForecastService.Jobs.ToArray());
     }
 
-    List<TaskInstance> Tasks = new List<TaskInstance>();
+    List<JobTask> Tasks = new List<JobTask>();
     string lastUpdatedTask = "";
 
     //protected override void OnInitialized()
@@ -48,8 +50,8 @@
     //    Jobs.Add(new JobModel { Id = 5, Description = "Finish blog post", Status = JobStatuses.Todo, LastUpdated = DateTime.Now });
     //}
 
-    void HandleStatusUpdated(TaskInstance task)
+    void HandleStatusUpdated(JobTask jobTask)
     {
-        lastUpdatedTask = task.ToString();
+        lastUpdatedTask = jobTask.ToString();
     }
 }

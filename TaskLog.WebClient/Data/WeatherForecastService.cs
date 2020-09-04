@@ -2,58 +2,63 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 
 namespace TaskLog.WebClient.Data
 {
     public class WeatherForecastService
     {
-        Calendar calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
+        private const string JobFile = "jobs.json";
+        private const string TaskFile = "tasks.json";
+        readonly Calendar _calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
         private int id = 0;
-        //public List<ProjectTask> GetWeekProjectTasks(IEnumerable<ProjectTask> tasks, int calendarWeek)
-        //{
-        //    return tasks.Where(x => calendar.GetWeekOfYear(x.DateTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday).Equals(calendarWeek)).ToList();
-        //}
+        
 
         public int GetCurrentCalendarWeek()
         {
-            return calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            return _calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         }
 
-        //public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
-        //{
-        //    var rng = new Random();
-        //    return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = startDate.AddDays(index),
-        //        TemperatureC = rng.Next(-20, 55),
-        //        Summary = Summaries[rng.Next(Summaries.Length)]
-        //    }).ToArray());
-        //}
-
-        public static IEnumerable<TaskClass> TaskClasses =>
-            new List<TaskClass>() {
-                new TaskClass(){Id = 1, Description = "Project 1 SW", Code = "32547-A-210-400", DefaultColor = "LIGHTCORAL"},
-                new TaskClass(){Id = 2, Description = "Project 300 HW", Code = "78548-A-210-400", DefaultColor = "MOCCASIN"},
-                new TaskClass(){Id = 3, Description = "Project 16513 SW", Code = "65894-A-210-400", DefaultColor = "LIGHTCYAN"},
-                new TaskClass(){Id = 4, Description = "Project 54217 SW", Code = "54127-A-210-400", DefaultColor = "GAINSBORO"},
-
-            };
-
-        public TaskInstance[] GetTaskInstances(DateTime taskTime)
+        public static void SaveJobs(ProjectJob[] jobs)
         {
-            return Enumerable.Range(1, 5).Select(index => GetTaskInstance(taskTime)).ToArray();
+            var jobsJson = JsonSerializer.Serialize(jobs);
+            System.IO.File.WriteAllText(JobFile, jobsJson);
+        }
+
+        public static void LoadJobs()
+        {
+            var jobsJson = System.IO.File.ReadAllText(JobFile);
+            Jobs = JsonSerializer.Deserialize<ProjectJob[]>(jobsJson);
+        }
+
+        public static void SaveTasks(JobTask[] tasks)
+        {
+            var jobs = JsonSerializer.Serialize(tasks);
+            System.IO.File.WriteAllText(JobFile, jobs);
+        }
+
+        public static void LoadTasks()
+        {
+            var json = System.IO.File.ReadAllText(JobFile);
+            Jobs = JsonSerializer.Deserialize<ProjectJob[]>(json);
+        }
+
+        public static IEnumerable<ProjectJob> Jobs { get; set; }
+        public JobTask[] GetJobTasks(DateTime taskTime)
+        {
+            return Enumerable.Range(1, 5).Select(index => GetJobTask(taskTime)).ToArray();
         }
 
         private readonly Random _rng = new Random();
 
-        public TaskInstance GetTaskInstance(DateTime taskTime)
+        public JobTask GetJobTask(DateTime taskTime)
         {
-            return new TaskInstance()
+            return new JobTask()
             {
                 Id = id++,
                 Date = taskTime.Date,
                 Hours = (double)(_rng.Next(0, 6)) / 2,
-                TaskClass = TaskClasses.ElementAt(_rng.Next()%4),
+                ProjectJob = Jobs.ElementAt(_rng.Next()%4),
                 TaskType = (TaskType)(_rng.Next()%5),
             };
         }

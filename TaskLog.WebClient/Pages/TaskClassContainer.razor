@@ -5,18 +5,18 @@
 </div>
 
 @code {
-    [Parameter] public List<TaskClass> Jobs { get; set; }
+    [Parameter] public List<ProjectJob> Jobs { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public EventCallback<TaskInstance> OnStatusUpdated { get; set; }
+    [Parameter] public EventCallback<JobTask> OnStatusUpdated { get; set; }
 
-    public TaskInstance Payload { get; set; }
+    public JobTask Payload { get; set; }
 
     public async Task UpdateJobAsync(int newJobId, int taskId)
     {
         var task = Jobs.SingleOrDefault(x => x.Id == newJobId);
 
         if (task != null) {
-            Payload.TaskClass = task;
+            Payload.ProjectJob = task;
             await OnStatusUpdated.InvokeAsync(Payload);
         }
     }

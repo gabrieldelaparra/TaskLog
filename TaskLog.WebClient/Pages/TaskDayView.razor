@@ -30,9 +30,9 @@
         @ondragenter="HandleDragEnter"
         @ondragleave="HandleDragLeave">
 
-        @foreach (var taskInstance in Tasks)
+        @foreach (var jobTask in Tasks)
         {
-            <TaskView Task="taskInstance" OnHoursChanged="UpdateDayHours" />
+            <TaskView JobTask="jobTask" OnHoursChanged="UpdateDayHours" />
         }
 
     </ul>
@@ -42,7 +42,7 @@
     [CascadingParameter] TaskWeekView TaskWeek { get; set; }
     [Parameter] public string ShortDateString { get; set; }
 
-    List<TaskInstance> Tasks = new List<TaskInstance>();
+    List<JobTask> Tasks = new List<JobTask>();
     string dropClass = "";
 
     double DayHours { get; set; }
