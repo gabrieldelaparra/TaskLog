@@ -1,0 +1,66 @@
+﻿@inject TaskDragStateHandler TaskDragStateHandler
+<style>
+    .jobItem {
+        display: flex;
+        flex-direction: row;
+        background: @Job.DefaultColor;
+    }
+
+    .jobDropzone {
+        padding: 3px;
+        border: 1px dashed #75868a;
+        list-style: none;
+        min-height: 100px;
+    }
+
+    .no-drop {
+        border: 1px dashed red;
+        background: BISQUE;
+    }
+
+    .can-drop {
+        border: 1px dashed green;
+        background: HONEYDEW;
+    }
+</style>
+
+<div class="jobItem">
+    <ul class="jobDropzone @dropClass"
+        ondragover="event.preventDefault();"
+        ondragstart="event.dataTransfer.setData('', event.target.id);"
+        @ondrop="HandleDrop"
+        @ondragenter="HandleDragEnter"
+        @ondragleave="HandleDragLeave">
+
+        <p>@Job.ToString()</p>
+
+    </ul>
+</div>
+
+@code {
+    [Parameter] public ProjectJob Job { get; set; }
+    private TaskView TaskView => TaskDragStateHandler.TaskView;
+
+    string dropClass = "";
+
+    private void HandleDragEnter()
+    {
+        dropClass = "can-drop";
+    }
+
+    private void HandleDragLeave()
+    {
+        dropClass = "";
+    }
+
+    private void HandleDrop()
+    {
+        dropClass = "";
+
+        TaskView.JobTask.ProjectJob = Job;
+        TaskView.UpdateState();
+
+        StateHasChanged();
+    }
+}
+

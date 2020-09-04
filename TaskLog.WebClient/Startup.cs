@@ -25,7 +25,7 @@ namespace TaskLog.WebClient
                 config.DetailedErrors = true;
             });
             services.AddSingleton<WeatherForecastService>();
-            //services.AddBlazorDragDrop();
+            services.AddSingleton<TaskDragStateHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,11 +1,15 @@
-﻿<style>
-    .jobs-container {
+﻿@inject TaskDragStateHandler TaskDragStateHandler
+
+<style>
+    .week-container {
         display: flex;
+        margin-left: 160px;
         justify-content: space-around;
+        flex-direction: row;
     }
 </style>
 
-<div class="jobs-container">
+<div class="week-container">
     <CascadingValue Value="this">
         @ChildContent
     </CascadingValue>
@@ -16,7 +20,7 @@
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public EventCallback<JobTask> OnStatusUpdated { get; set; }
 
-    public JobTask Payload { get; set; }
+    public JobTask Payload => TaskDragStateHandler.TaskView.JobTask;
 
     public async Task UpdateJobAsync(string newStatus)
     {

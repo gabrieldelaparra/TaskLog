@@ -2,6 +2,35 @@
 @using System.Globalization
 @inject WeatherForecastService ForecastService
 
+<style>
+    .sidenav {
+        height: 100%;
+        width: 160px;
+        position: fixed;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        overflow-x: hidden;
+        padding-top: 20px;
+    }
+
+    .job-container {
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+        width: 160px;
+    }
+</style>
+
+<div class="sidenav">
+    <div class="job-container">
+        @foreach (var job in Jobs)
+        {
+            <JobView Job="job"></JobView>
+        }
+    </div>
+</div>
+
 <TaskWeekView Tasks="Tasks" OnStatusUpdated="HandleStatusUpdated">
     <TaskDayView ShortDateString="@DateTime.Now.AddDays(-2).ToShortDateString()" />
     <TaskDayView ShortDateString="@DateTime.Now.AddDays(-1).ToShortDateString()" />
@@ -14,17 +43,15 @@
 <p>Last updated task was: <strong>@lastUpdatedTask</strong></p>
 <hr />
 
-@*@foreach (var task in Jobs)
-{
-    <p>@task.Name - <strong>@task.Hours</strong></p>
-}*@
-
 @code {
     int calendarWeek;
     List<JobTask> ProjectTasks { get; set; }
+    List<ProjectJob> Jobs { get; set; }
 
     protected override void OnInitialized()
     {
+        Jobs = WeatherForecastService.Jobs.ToList();
+
         var calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
         calendarWeek = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         var tasks = new List<JobTask>();
@@ -35,7 +62,8 @@
         ProjectTasks = tasks.ToList();
         Tasks = tasks.ToList();
 
-        WeatherForecastService.SaveJobs(WeatherForecastService.Jobs.ToArray());
+        //WeatherForecastService.SaveJobs(WeatherForecastService.Jobs.ToArray());
+
     }
 
     List<JobTask> Tasks = new List<JobTask>();

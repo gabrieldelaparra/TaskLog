@@ -1,4 +1,5 @@
-﻿<style>
+﻿@inject TaskDragStateHandler TaskDragStateHandler
+<style>
     input {
         background-color: transparent;
         border: 0px solid;
@@ -33,7 +34,7 @@
     <!-- Drag, Clock/Hours, Badge -->
     <div class="d-inline-flex al-cnt">
         <!-- Drag -->
-        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@(() => HandleDragStart(JobTask))"></span>
+        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@HandleDragStart"></span>
 
         <!-- Clock/Hours -->
         <div class="input-group input-group-sm mt-1">
@@ -61,9 +62,37 @@
 </div>
 
 @code {
-    [CascadingParameter] TaskWeekView TaskWeek { get; set; }
+    //View Model
     [Parameter] public JobTask JobTask { get; set; }
 
+    private void HandleDragStart()
+    {
+        TaskDragStateHandler.SetSelectedTask(this);
+    }
+
+    //TODO: I am not convinced that this is the best way to do this.
+    public double Hours
+    {
+        get => JobTask.Hours;
+        set
+        {
+            JobTask.Hours = value;
+            OnHoursChanged.Invoke();
+        }
+    }
+
+    //TODO: I am not convinced that this is the best way to do this.
+    [Parameter] public Action OnHoursChanged { get; set; }
+
+
+    //TODO: Also not convinced about this one. I use this one
+    //TODO: from the sideNav to update this component when moved to another task.
+    public void UpdateState()
+    {
+        StateHasChanged();
+    }
+
+    //TODO: Refactor out
     private string BadgeStyle
     {
         get
@@ -82,25 +111,11 @@
         }
     }
 
-    public double Hours
-    {
-        get => JobTask.Hours;
-        set {
-            JobTask.Hours = value;
-            OnHoursChanged.Invoke();
-        }
-    }
-
-    [Parameter] public Action OnHoursChanged { get; set; }
-
+    //TODO: Refactor out
     public void RollBadge()
     {
         var currentIndex = (int)JobTask.TaskType;
         JobTask.TaskType = (TaskType)(++currentIndex % 5);
     }
 
-    private void HandleDragStart(JobTask selectedJob)
-    {
-        TaskWeek.Payload = selectedJob;
-    }
 }

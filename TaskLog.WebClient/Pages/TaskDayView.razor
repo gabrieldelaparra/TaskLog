@@ -1,10 +1,10 @@
 ﻿<style>
-    .job-status {
+    .taskDay {
         display: flex;
         flex-direction: column;
     }
 
-    .dropzone {
+    .dayDropzone {
         padding: 3px;
         border: 1px dashed #75868a;
         list-style: none;
@@ -20,10 +20,10 @@
     }
 </style>
 
-<div class="job-status">
+<div class="taskDay">
     <h3>@ShortDateString (@DayHours)</h3>
 
-    <ul class="dropzone @dropClass"
+    <ul class="dayDropzone @dropClass"
         ondragover="event.preventDefault();"
         ondragstart="event.dataTransfer.setData('', event.target.id);"
         @ondrop="HandleDrop"
