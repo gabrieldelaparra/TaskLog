@@ -1,6 +1,6 @@
 using System;
 
-namespace DailyHours.WebClient.Data
+namespace TaskLog.WebClient.Data
 {
     public class WeatherForecast
     {
