@@ -25,7 +25,6 @@
         if (task != null)
         {
             task.Date = DateTime.Parse(newStatus);
-            //task.LastUpdated = DateTime.Now;
             await OnStatusUpdated.InvokeAsync(Payload);
         }
     }
