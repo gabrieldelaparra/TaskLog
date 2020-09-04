@@ -1,15 +1,14 @@
 ﻿@page "/"
 @using System.Globalization
 @inject WeatherForecastService ForecastService
-@*<WeekView CalendarWeek="calendarWeek" ProjectTasks="ProjectTasks"></WeekView>*@
 
-<JobContainer Jobs="Jobs" OnStatusUpdated="HandleStatusUpdated">
-    <JobDayList ShortDateString="@DateTime.Now.AddDays(-2).ToShortDateString()" />
-    <JobDayList ShortDateString="@DateTime.Now.AddDays(-1).ToShortDateString()" />
-    <JobDayList ShortDateString="@DateTime.Now.ToShortDateString()" />
-    <JobDayList ShortDateString="@DateTime.Now.AddDays(1).ToShortDateString()" />
-    <JobDayList ShortDateString="@DateTime.Now.AddDays(2).ToShortDateString()" />
-</JobContainer>
+<JobContainerView Jobs="Jobs" OnStatusUpdated="HandleStatusUpdated">
+    <JobDayView ShortDateString="@DateTime.Now.AddDays(-2).ToShortDateString()" />
+    <JobDayView ShortDateString="@DateTime.Now.AddDays(-1).ToShortDateString()" />
+    <JobDayView ShortDateString="@DateTime.Now.ToShortDateString()" />
+    <JobDayView ShortDateString="@DateTime.Now.AddDays(1).ToShortDateString()" />
+    <JobDayView ShortDateString="@DateTime.Now.AddDays(2).ToShortDateString()" />
+</JobContainerView>
 
 <hr />
 <p>Last updated job was: <strong>@lastUpdatedJob</strong></p>

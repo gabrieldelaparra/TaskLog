@@ -22,7 +22,9 @@
 </style>
 
 
-<div class="border rounded m-2 px-1" style="width: 16rem;">
+<div class="border rounded m-2 px-1" style="        width: 16rem;
+        background: @BackGroundColor;
+" >
 
     <!-- Drag, Clock/Hours, Badge -->
     <div class="d-inline-flex al-cnt">
@@ -55,8 +57,9 @@
 </div>
 
 @code {
-    [CascadingParameter] JobContainer Container { get; set; }
+    [CascadingParameter] JobContainerView Container { get; set; }
     [Parameter] public ProjectTask ProjectTask { get; set; }
+    [Parameter] public string BackGroundColor { get; set; }
 
     private void HandleDragStart(ProjectTask selectedJob)
     {

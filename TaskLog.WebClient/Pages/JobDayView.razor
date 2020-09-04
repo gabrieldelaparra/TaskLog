@@ -2,8 +2,6 @@
     .job-status {
         display: flex;
         flex-direction: column;
-        
-        /*width: 312px;*/
     }
 
     .dropzone {
@@ -34,16 +32,15 @@
 
         @foreach (var job in Jobs)
         {
-            <JobTask ProjectTask="job" />
+            <JobTaskView ProjectTask="job" />
         }
 
     </ul>
 </div>
 
 @code {
-    [CascadingParameter] JobContainer Container { get; set; }
+    [CascadingParameter] JobContainerView Container { get; set; }
     [Parameter] public string ShortDateString { get; set; }
-    //[Parameter] public JobStatuses[] AllowedStatuses { get; set; }
 
     List<ProjectTask> Jobs = new List<ProjectTask>();
     string dropClass = "";
@@ -58,14 +55,7 @@
     {
         if (ShortDateString == Container.Payload.DateTime.ToShortDateString()) return;
 
-        //if (AllowedStatuses != null && !AllowedStatuses.Contains(Container.Payload.Status))
-        //{
-        //    dropClass = "no-drop";
-        //}
-        //else
-        //{
         dropClass = "can-drop";
-        //}
     }
 
     private void HandleDragLeave()
@@ -77,7 +67,6 @@
     {
         dropClass = "";
 
-        //if (AllowedStatuses != null && !AllowedStatuses.Contains(Container.Payload.Status)) return;
 
         await Container.UpdateJobAsync(ShortDateString);
     }
