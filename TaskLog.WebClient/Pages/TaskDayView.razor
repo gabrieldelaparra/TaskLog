@@ -32,14 +32,14 @@
 
         @foreach (var jobTask in _dayTasks)
         {
-            <TaskView JobTask="jobTask" OnHoursChanged="StateHasChanged" />
+            <TaskView JobTask="jobTask" OnDataChanged="HandleDataChanged" />
         }
 
     </ul>
 </div>
 
 @code {
-    
+
     //Needed to get all the tasks: easier this way.
     [CascadingParameter] TaskWeekView TaskWeek { get; set; }
     [Parameter] public string DayDate { get; set; }
@@ -47,11 +47,18 @@
     private readonly List<JobTask> _dayTasks = new List<JobTask>();
     private string _dropClass = "";
 
-    //Called when the Parameter ShortDateString is set;
+    //Called when the Parameter DayDate is set;
     protected override void OnParametersSet()
     {
         _dayTasks.Clear();
         _dayTasks.AddRange(TaskWeek.Tasks.Where(x => x.Date.ToShortDateString() == DayDate));
+    }
+
+    private void HandleDataChanged()
+    {
+        StateHasChanged();
+        //TODO: Have this only once somewhere, currently in several places
+        WeatherForecastService.SaveTasks(TaskWeek.Tasks.ToArray());
     }
 
     private void HandleDragEnter()

@@ -43,7 +43,7 @@
                     <i class="oi oi-clock"></i>
                 </span>
             </div>
-            <input type="number" class="form-control" @bind="Hours" placeholder="2">
+            <input type="number" class="form-control" @bind="Hours" placeholder="2" step="0.5" min="0">
         </div>
 
         <!-- Badge -->
@@ -71,26 +71,24 @@
         TaskDragStateHandler.SetSelectedTask(this);
     }
 
-    //TODO: I am not convinced that this is the best way to do this.
     public double Hours
     {
         get => JobTask.Hours;
         set
         {
             JobTask.Hours = value;
-            OnHoursChanged.Invoke();
+            UpdateState();
         }
     }
 
-    //TODO: I am not convinced that this is the best way to do this.
-    [Parameter] public Action OnHoursChanged { get; set; }
-
-
-    //TODO: Also not convinced about this one. I use this one
-    //TODO: from the sideNav to update this component when moved to another task.
+    //I need this for 2 reasons:
+    //1. To call if from outside (sideNav after updating the job)
+    //2. To tell the parent to save; (this could be done by Cascading);
+    [Parameter] public Action OnDataChanged { get; set; }
     public void UpdateState()
     {
         StateHasChanged();
+        OnDataChanged.Invoke();
     }
 
     //TODO: Refactor out
@@ -117,6 +115,7 @@
     {
         var currentIndex = (int)JobTask.TaskType;
         JobTask.TaskType = (TaskType)(++currentIndex % 5);
+        UpdateState();
     }
 
 }
