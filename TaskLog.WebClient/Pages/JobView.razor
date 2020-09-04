@@ -3,14 +3,14 @@
     .jobItem {
         display: flex;
         flex-direction: row;
-        background: @Job.DefaultColor;
     }
 
     .jobDropzone {
         padding: 3px;
         border: 1px dashed #75868a;
         list-style: none;
-        min-height: 100px;
+        width: 200px;
+        /*min-height: 100px;*/
     }
 
     .no-drop {
@@ -25,16 +25,22 @@
 </style>
 
 <div class="jobItem">
-    <ul class="jobDropzone @dropClass"
-        ondragover="event.preventDefault();"
-        ondragstart="event.dataTransfer.setData('', event.target.id);"
-        @ondrop="HandleDrop"
-        @ondragenter="HandleDragEnter"
-        @ondragleave="HandleDragLeave">
+    <div class="jobDropzone @dropClass"
+         ondragover="event.preventDefault();"
+         ondragstart="event.dataTransfer.setData('', event.target.id);"
+         @ondrop="HandleDrop"
+         @ondragenter="HandleDragEnter"
+         @ondragleave="HandleDragLeave"
+         style="background: @Job.DefaultColor">
 
-        <p>@Job.ToString()</p>
+        @Job.Code
+        <div class="text-truncate">
+            <small>
+                @Job.Description
+            </small>
+        </div>
 
-    </ul>
+    </div>
 </div>
 
 @code {

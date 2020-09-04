@@ -18,18 +18,19 @@
 @code {
     [Parameter] public List<JobTask> Tasks { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public EventCallback<JobTask> OnStatusUpdated { get; set; }
+    [Parameter] public EventCallback<JobTask> OnDateChanged { get; set; }
 
-    public JobTask Payload => TaskDragStateHandler.TaskView.JobTask;
+    public JobTask DraggedTask => TaskDragStateHandler.TaskView.JobTask;
 
-    public async Task UpdateJobAsync(string newStatus)
+    public async Task MoveToNewDate(string newTaskDate)
     {
-        var task = Tasks.SingleOrDefault(x => x.Id == Payload.Id);
+        //from the complete task list, search the on that is dragged.
+        var task = Tasks.SingleOrDefault(x => x.Id == DraggedTask.Id);
 
         if (task != null)
         {
-            task.Date = DateTime.Parse(newStatus);
-            await OnStatusUpdated.InvokeAsync(Payload);
+            task.Date = DateTime.Parse(newTaskDate);
+            await OnDateChanged.InvokeAsync(DraggedTask);
         }
     }
 }

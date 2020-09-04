@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 
@@ -12,7 +13,7 @@ namespace TaskLog.WebClient.Data
         private const string TaskFile = "tasks.json";
         readonly Calendar _calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
         private int id = 0;
-        
+
 
         public int GetCurrentCalendarWeek()
         {
@@ -22,28 +23,35 @@ namespace TaskLog.WebClient.Data
         public static void SaveJobs(ProjectJob[] jobs)
         {
             var jobsJson = JsonSerializer.Serialize(jobs);
-            System.IO.File.WriteAllText(JobFile, jobsJson);
+            File.WriteAllText(JobFile, jobsJson);
         }
 
         public static void LoadJobs()
         {
-            var jobsJson = System.IO.File.ReadAllText(JobFile);
-            Jobs = JsonSerializer.Deserialize<ProjectJob[]>(jobsJson);
+            if (File.Exists(JobFile))
+            {
+                var jobsJson = System.IO.File.ReadAllText(JobFile);
+                Jobs = JsonSerializer.Deserialize<ProjectJob[]>(jobsJson);
+            }
         }
 
         public static void SaveTasks(JobTask[] tasks)
         {
-            var jobs = JsonSerializer.Serialize(tasks);
-            System.IO.File.WriteAllText(JobFile, jobs);
+            var tasksJson = JsonSerializer.Serialize(tasks);
+            File.WriteAllText(TaskFile, tasksJson);
         }
 
         public static void LoadTasks()
         {
-            var json = System.IO.File.ReadAllText(JobFile);
-            Jobs = JsonSerializer.Deserialize<ProjectJob[]>(json);
+            if (File.Exists(TaskFile))
+            {
+                var taskJson = System.IO.File.ReadAllText(TaskFile);
+                Tasks = JsonSerializer.Deserialize<JobTask[]>(taskJson);
+            }
         }
 
-        public static IEnumerable<ProjectJob> Jobs { get; set; }
+        public static IEnumerable<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
+        public static IEnumerable<JobTask> Tasks { get; set; } = new List<JobTask>();
         public JobTask[] GetJobTasks(DateTime taskTime)
         {
             return Enumerable.Range(1, 5).Select(index => GetJobTask(taskTime)).ToArray();
@@ -58,8 +66,8 @@ namespace TaskLog.WebClient.Data
                 Id = id++,
                 Date = taskTime.Date,
                 Hours = (double)(_rng.Next(0, 6)) / 2,
-                ProjectJob = Jobs.ElementAt(_rng.Next()%4),
-                TaskType = (TaskType)(_rng.Next()%5),
+                ProjectJob = Jobs.ElementAt(_rng.Next() % 4),
+                TaskType = (TaskType)(_rng.Next() % 5),
             };
         }
     }

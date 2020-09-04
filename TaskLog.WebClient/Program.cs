@@ -18,6 +18,8 @@ namespace TaskLog.WebClient
         public static void Main(string[] args)
         {
             WeatherForecastService.LoadJobs();
+            WeatherForecastService.LoadTasks();
+
             CreateHostBuilder(args).Build().Run();
         }
 

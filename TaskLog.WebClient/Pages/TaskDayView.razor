@@ -12,71 +12,67 @@
     }
 
     .no-drop {
-        border: 2px dashed red;
+        border: 1px dashed red;
     }
 
     .can-drop {
-        border: 2px dashed green;
+        border: 1px dashed green;
     }
 </style>
 
 <div class="taskDay">
-    <h3>@ShortDateString (@DayHours)</h3>
+    <h3>@DayDate (@_dayTasks.Sum(x => x.Hours))</h3>
 
-    <ul class="dayDropzone @dropClass"
+    <ul class="dayDropzone @_dropClass"
         ondragover="event.preventDefault();"
         ondragstart="event.dataTransfer.setData('', event.target.id);"
         @ondrop="HandleDrop"
         @ondragenter="HandleDragEnter"
         @ondragleave="HandleDragLeave">
 
-        @foreach (var jobTask in Tasks)
+        @foreach (var jobTask in _dayTasks)
         {
-            <TaskView JobTask="jobTask" OnHoursChanged="UpdateDayHours" />
+            <TaskView JobTask="jobTask" OnHoursChanged="StateHasChanged" />
         }
 
     </ul>
 </div>
 
 @code {
+    
+    //Needed to get all the tasks: easier this way.
     [CascadingParameter] TaskWeekView TaskWeek { get; set; }
-    [Parameter] public string ShortDateString { get; set; }
+    [Parameter] public string DayDate { get; set; }
 
-    List<JobTask> Tasks = new List<JobTask>();
-    string dropClass = "";
+    private readonly List<JobTask> _dayTasks = new List<JobTask>();
+    private string _dropClass = "";
 
-    double DayHours { get; set; }
-
-    void UpdateDayHours()
-    {
-        DayHours = Tasks.Sum(x => x.Hours);
-        StateHasChanged();
-    }
-
+    //Called when the Parameter ShortDateString is set;
     protected override void OnParametersSet()
     {
-        Tasks.Clear();
-        Tasks.AddRange(TaskWeek.Tasks.Where(x => x.Date.ToShortDateString() == ShortDateString));
-        UpdateDayHours();
+        _dayTasks.Clear();
+        _dayTasks.AddRange(TaskWeek.Tasks.Where(x => x.Date.ToShortDateString() == DayDate));
     }
 
     private void HandleDragEnter()
     {
-        if (ShortDateString == TaskWeek.Payload.Date.ToShortDateString())
+        //If the task is already there, do nothing;
+        if (DayDate == TaskWeek.DraggedTask.Date.ToShortDateString())
             return;
 
-        dropClass = "can-drop";
+        _dropClass = "can-drop";
     }
 
     private void HandleDragLeave()
     {
-        dropClass = "";
+        _dropClass = "";
     }
 
     private async Task HandleDrop()
     {
-        dropClass = "";
-
-        await TaskWeek.UpdateJobAsync(ShortDateString);
+        _dropClass = "";
+        //Needs to happen on the Week, because it contains all tasks, it will also handle
+        //The destination day movement (it is not ok to be handled here, but could be done).
+        await TaskWeek.MoveToNewDate(DayDate);
     }
 }
