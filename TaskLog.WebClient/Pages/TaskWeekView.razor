@@ -12,7 +12,7 @@
 </div>
 
 @code {
-    [Parameter] public List<TaskInstance> Jobs { get; set; }
+    [Parameter] public List<TaskInstance> Tasks { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public EventCallback<TaskInstance> OnStatusUpdated { get; set; }
 
@@ -20,7 +20,7 @@
 
     public async Task UpdateJobAsync(string newStatus)
     {
-        var task = Jobs.SingleOrDefault(x => x.Id == Payload.Id);
+        var task = Tasks.SingleOrDefault(x => x.Id == Payload.Id);
 
         if (task != null)
         {

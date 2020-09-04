@@ -27,13 +27,13 @@
 
 
 <div class="border rounded m-2 px-1" style="        width: 16rem;
-        background: @TaskInstance.TaskClass.DefaultColor;
+        background: @Task.TaskClass.DefaultColor;
 ">
 
     <!-- Drag, Clock/Hours, Badge -->
     <div class="d-inline-flex al-cnt">
         <!-- Drag -->
-        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@(() => HandleDragStart(TaskInstance))"></span>
+        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@(() => HandleDragStart(Task))"></span>
 
         <!-- Clock/Hours -->
         <div class="input-group input-group-sm mt-1">
@@ -42,12 +42,12 @@
                     <i class="oi oi-clock"></i>
                 </span>
             </div>
-            <input type="number" class="form-control" @bind="TaskInstance.Hours" placeholder="2">
+            <input type="number" class="form-control" @bind="Task.Hours" placeholder="2">
         </div>
 
         <!-- Badge -->
         <div>
-            <button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1" style="border:0" @onclick="RollBadge">@TaskInstance.TaskType.ToString()</button>
+            <button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1" style="border:0" @onclick="RollBadge">@Task.TaskType.ToString()</button>
         </div>
 
     </div>
@@ -55,26 +55,27 @@
     <!-- Task Element -->
     <div class="text-truncate">
         <small>
-            (22541-A-21000-260) Amazon Askar SW Tasks to do some day
+            @Task.TaskClass.ToString()
         </small>
     </div>
 </div>
 
 @code {
-    [CascadingParameter] JobContainerView Container { get; set; }
-    [Parameter] public TaskInstance TaskInstance { get; set; }
+    [CascadingParameter] TaskWeekView Container { get; set; }
+    [Parameter] public TaskInstance Task { get; set; }
+
     private string BadgeStyle
     {
         get {
-            if (TaskInstance.TaskType == TaskType.Error)
+            if (Task.TaskType == TaskType.Error)
                 return "danger";
-            if (TaskInstance.TaskType == TaskType.Normal)
+            if (Task.TaskType == TaskType.Normal)
                 return "light";
-            if (TaskInstance.TaskType == TaskType.Other)
+            if (Task.TaskType == TaskType.Other)
                 return "secondary";
-            if (TaskInstance.TaskType == TaskType.Rework)
+            if (Task.TaskType == TaskType.Rework)
                 return "warning";
-            if (TaskInstance.TaskType == TaskType.Tools)
+            if (Task.TaskType == TaskType.Tools)
                 return "info";
             return "light";
         }
@@ -82,8 +83,8 @@
 
     public void RollBadge()
     {
-        var currentIndex = (int) TaskInstance.TaskType;
-        TaskInstance.TaskType = (TaskType)(++currentIndex % 5);
+        var currentIndex = (int) Task.TaskType;
+        Task.TaskType = (TaskType)(++currentIndex % 5);
     }
 
     private void HandleDragStart(TaskInstance selectedJob)

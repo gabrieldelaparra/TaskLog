@@ -21,7 +21,7 @@
 </style>
 
 <div class="job-status">
-    <h3>@ShortDateString (@Jobs.Count())</h3>
+    <h3>@ShortDateString (@Tasks.Sum(x=>x.Hours))</h3>
 
     <ul class="dropzone @dropClass"
         ondragover="event.preventDefault();"
@@ -30,30 +30,31 @@
         @ondragenter="HandleDragEnter"
         @ondragleave="HandleDragLeave">
 
-        @foreach (var job in Jobs)
+        @foreach (var taskInstance in Tasks)
         {
-            <JobTaskView TaskInstance="job" />
+            <TaskView Task="taskInstance" />
         }
 
     </ul>
 </div>
 
 @code {
-    [CascadingParameter] JobContainerView Container { get; set; }
+    [CascadingParameter] TaskWeekView Container { get; set; }
     [Parameter] public string ShortDateString { get; set; }
 
-    List<TaskInstance> Jobs = new List<TaskInstance>();
+    List<TaskInstance> Tasks = new List<TaskInstance>();
     string dropClass = "";
 
     protected override void OnParametersSet()
     {
-        Jobs.Clear();
-        Jobs.AddRange(Container.Jobs.Where(x => x.Date.ToShortDateString() == ShortDateString));
+        Tasks.Clear();
+        Tasks.AddRange(Container.Tasks.Where(x => x.Date.ToShortDateString() == ShortDateString));
     }
 
     private void HandleDragEnter()
     {
-        if (ShortDateString == Container.Payload.Date.ToShortDateString()) return;
+        if (ShortDateString == Container.Payload.Date.ToShortDateString()) 
+            return;
 
         dropClass = "can-drop";
     }
@@ -66,7 +67,6 @@
     private async Task HandleDrop()
     {
         dropClass = "";
-
 
         await Container.UpdateJobAsync(ShortDateString);
     }

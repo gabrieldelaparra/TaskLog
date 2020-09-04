@@ -39,11 +39,6 @@ namespace TaskLog.WebClient.Data
 
             };
 
-        //public ProjectTask[] GetProjectTasks(DateTime taskTime)
-        //{
-        //    return Enumerable.Range(1, 5).Select(index => GetProjectTask(taskTime)).ToArray();
-        //}
-
         public TaskInstance[] GetTaskInstances(DateTime taskTime)
         {
             return Enumerable.Range(1, 5).Select(index => GetTaskInstance(taskTime)).ToArray();
@@ -62,16 +57,5 @@ namespace TaskLog.WebClient.Data
                 TaskType = (TaskType)(_rng.Next()%5),
             };
         }
-
-        //public ProjectTask GetProjectTask(DateTime taskTime)
-        //{
-        //    return new ProjectTask()
-        //    {
-        //        Id = id++,
-        //        Name = $"Task {_rng.Next(0, 55)}",
-        //        Hours = (double)(_rng.Next(0, 6)) / 2,
-        //        DateTime = taskTime,
-        //    };
-        //}
     }
 }
