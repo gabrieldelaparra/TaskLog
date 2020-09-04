@@ -1,6 +1,6 @@
 ﻿namespace DailyHours.WebClient.Data
 {
-    public class TaskElement
+    public class TaskClass
     {
         public int Id { get; set; }
         public string Code { get; set; }
