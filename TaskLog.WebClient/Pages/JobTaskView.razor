@@ -8,28 +8,32 @@
         cursor: grab;
     }
 
-    .draggable:active {
-        cursor: grabbing;
-    }
+        .draggable:active {
+            cursor: grabbing;
+        }
 
     .dragging {
         cursor: grabbing;
     }
 
-    .al-cnt{
+    button:focus {
+        outline: 0;
+    }
+
+    .al-cnt {
         align-items: center;
     }
 </style>
 
 
 <div class="border rounded m-2 px-1" style="        width: 16rem;
-        background: @BackGroundColor;
-" >
+        background: @TaskInstance.TaskClass.DefaultColor;
+">
 
     <!-- Drag, Clock/Hours, Badge -->
     <div class="d-inline-flex al-cnt">
         <!-- Drag -->
-        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@(() => HandleDragStart(ProjectTask))"></span>
+        <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@(() => HandleDragStart(TaskInstance))"></span>
 
         <!-- Clock/Hours -->
         <div class="input-group input-group-sm mt-1">
@@ -38,16 +42,16 @@
                     <i class="oi oi-clock"></i>
                 </span>
             </div>
-            <input type="number" class="form-control" @bind="ProjectTask.Hours" placeholder="2">
+            <input type="number" class="form-control" @bind="TaskInstance.Hours" placeholder="2">
         </div>
 
         <!-- Badge -->
         <div>
-            <button type="button" class="badge badge-light float-right mx-2 mt-1">Normal</button>
+            <button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1" style="border:0" @onclick="RollBadge">@TaskInstance.TaskType.ToString()</button>
         </div>
 
     </div>
-  
+
     <!-- Task Element -->
     <div class="text-truncate">
         <small>
@@ -58,10 +62,31 @@
 
 @code {
     [CascadingParameter] JobContainerView Container { get; set; }
-    [Parameter] public ProjectTask ProjectTask { get; set; }
-    [Parameter] public string BackGroundColor { get; set; }
+    [Parameter] public TaskInstance TaskInstance { get; set; }
+    private string BadgeStyle
+    {
+        get {
+            if (TaskInstance.TaskType == TaskType.Error)
+                return "danger";
+            if (TaskInstance.TaskType == TaskType.Normal)
+                return "light";
+            if (TaskInstance.TaskType == TaskType.Other)
+                return "secondary";
+            if (TaskInstance.TaskType == TaskType.Rework)
+                return "warning";
+            if (TaskInstance.TaskType == TaskType.Tools)
+                return "info";
+            return "light";
+        }
+    }
 
-    private void HandleDragStart(ProjectTask selectedJob)
+    public void RollBadge()
+    {
+        var currentIndex = (int) TaskInstance.TaskType;
+        TaskInstance.TaskType = (TaskType)(++currentIndex % 5);
+    }
+
+    private void HandleDragStart(TaskInstance selectedJob)
     {
         Container.Payload = selectedJob;
     }

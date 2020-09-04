@@ -12,11 +12,11 @@
 </div>
 
 @code {
-    [Parameter] public List<ProjectTask> Jobs { get; set; }
+    [Parameter] public List<TaskInstance> Jobs { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public EventCallback<ProjectTask> OnStatusUpdated { get; set; }
+    [Parameter] public EventCallback<TaskInstance> OnStatusUpdated { get; set; }
 
-    public ProjectTask Payload { get; set; }
+    public TaskInstance Payload { get; set; }
 
     public async Task UpdateJobAsync(string newStatus)
     {
@@ -24,8 +24,8 @@
 
         if (task != null)
         {
-            task.DateTime = DateTime.Parse(newStatus);
-            task.LastUpdated = DateTime.Now;
+            task.Date = DateTime.Parse(newStatus);
+            //task.LastUpdated = DateTime.Now;
             await OnStatusUpdated.InvokeAsync(Payload);
         }
     }

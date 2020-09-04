@@ -32,7 +32,7 @@
 
         @foreach (var job in Jobs)
         {
-            <JobTaskView ProjectTask="job" />
+            <JobTaskView TaskInstance="job" />
         }
 
     </ul>
@@ -42,18 +42,18 @@
     [CascadingParameter] JobContainerView Container { get; set; }
     [Parameter] public string ShortDateString { get; set; }
 
-    List<ProjectTask> Jobs = new List<ProjectTask>();
+    List<TaskInstance> Jobs = new List<TaskInstance>();
     string dropClass = "";
 
     protected override void OnParametersSet()
     {
         Jobs.Clear();
-        Jobs.AddRange(Container.Jobs.Where(x => x.DateTime.ToShortDateString() == ShortDateString));
+        Jobs.AddRange(Container.Jobs.Where(x => x.Date.ToShortDateString() == ShortDateString));
     }
 
     private void HandleDragEnter()
     {
-        if (ShortDateString == Container.Payload.DateTime.ToShortDateString()) return;
+        if (ShortDateString == Container.Payload.Date.ToShortDateString()) return;
 
         dropClass = "can-drop";
     }

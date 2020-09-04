@@ -14,29 +14,29 @@
 <p>Last updated job was: <strong>@lastUpdatedJob</strong></p>
 <hr />
 
-@foreach (var task in Jobs)
+@*@foreach (var task in Jobs)
 {
     <p>@task.Name - <strong>@task.Hours</strong></p>
-}
+}*@
 
 @code {
     int calendarWeek;
-    List<ProjectTask> ProjectTasks { get; set; }
+    List<TaskInstance> ProjectTasks { get; set; }
 
     protected override void OnInitialized()
     {
         var calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
         calendarWeek = calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-        var tasks = new List<ProjectTask>();
-        tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now));
-        tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(-1)));
-        tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(+5)));
-        tasks.AddRange(ForecastService.GetProjectTasks(DateTime.Now.AddDays(+2)));
+        var tasks = new List<TaskInstance>();
+        tasks.AddRange(ForecastService.GetTaskInstances(DateTime.Now));
+        tasks.AddRange(ForecastService.GetTaskInstances(DateTime.Now.AddDays(-1)));
+        tasks.AddRange(ForecastService.GetTaskInstances(DateTime.Now.AddDays(+5)));
+        tasks.AddRange(ForecastService.GetTaskInstances(DateTime.Now.AddDays(+2)));
         ProjectTasks = tasks.ToList();
         Jobs = tasks.ToList();
     }
 
-    List<ProjectTask> Jobs = new List<ProjectTask>();
+    List<TaskInstance> Jobs = new List<TaskInstance>();
     string lastUpdatedJob = "";
 
     //protected override void OnInitialized()
@@ -48,8 +48,8 @@
     //    Jobs.Add(new JobModel { Id = 5, Description = "Finish blog post", Status = JobStatuses.Todo, LastUpdated = DateTime.Now });
     //}
 
-    void HandleStatusUpdated(ProjectTask updatedJob)
+    void HandleStatusUpdated(TaskInstance updatedJob)
     {
-        lastUpdatedJob = updatedJob.Name;
+        lastUpdatedJob = updatedJob.ToString();
     }
 }
