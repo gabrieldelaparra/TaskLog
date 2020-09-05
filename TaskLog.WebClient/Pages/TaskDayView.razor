@@ -1,4 +1,5 @@
-﻿<style>
+﻿@inject WeatherForecastService ForecastService
+<style>
     .taskDay {
         display: flex;
         flex-direction: column;
@@ -58,7 +59,7 @@
     {
         StateHasChanged();
         //TODO: Have this only once somewhere, currently in several places
-        WeatherForecastService.SaveTasks(TaskWeek.Tasks.ToArray());
+        ForecastService.SaveTasks(TaskWeek.Tasks.ToArray());
     }
 
     private void HandleDragEnter()

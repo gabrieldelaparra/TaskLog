@@ -20,13 +20,13 @@ namespace TaskLog.WebClient.Data
             return _calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         }
 
-        public static void SaveJobs(ProjectJob[] jobs)
+        public void SaveJobs(IEnumerable<ProjectJob> jobs)
         {
-            var jobsJson = JsonSerializer.Serialize(jobs);
+            var jobsJson = JsonSerializer.Serialize(jobs.ToArray());
             File.WriteAllText(JobFile, jobsJson);
         }
 
-        public static void LoadJobs()
+        public void LoadJobs()
         {
             if (File.Exists(JobFile))
             {
@@ -35,23 +35,32 @@ namespace TaskLog.WebClient.Data
             }
         }
 
-        public static void SaveTasks(JobTask[] tasks)
+        public void SaveTasks(IEnumerable<JobTask> tasks)
         {
-            var tasksJson = JsonSerializer.Serialize(tasks);
+            var tasksJson = JsonSerializer.Serialize(tasks.ToArray());
             File.WriteAllText(TaskFile, tasksJson);
         }
 
-        public static void LoadTasks()
+        public void LoadTasks()
         {
             if (File.Exists(TaskFile))
             {
                 var taskJson = System.IO.File.ReadAllText(TaskFile);
                 Tasks = JsonSerializer.Deserialize<JobTask[]>(taskJson);
             }
+            else {
+                var tasks = new List<JobTask>();
+                tasks.AddRange(GetJobTasks(DateTime.Now));
+                tasks.AddRange(GetJobTasks(DateTime.Now.AddDays(-1)));
+                tasks.AddRange(GetJobTasks(DateTime.Now.AddDays(+5)));
+                tasks.AddRange(GetJobTasks(DateTime.Now.AddDays(+2)));
+                Tasks = tasks.ToList();
+                SaveTasks(Tasks);
+            }
         }
 
-        public static IEnumerable<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
-        public static IEnumerable<JobTask> Tasks { get; set; } = new List<JobTask>();
+        public IEnumerable<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
+        public IEnumerable<JobTask> Tasks { get; set; } = new List<JobTask>();
         public JobTask[] GetJobTasks(DateTime taskTime)
         {
             return Enumerable.Range(1, 5).Select(index => GetJobTask(taskTime)).ToArray();
@@ -63,7 +72,7 @@ namespace TaskLog.WebClient.Data
         {
             return new JobTask()
             {
-                Id = id++,
+                Id = Guid.NewGuid(),
                 Date = taskTime.Date,
                 Hours = (double)(_rng.Next(0, 6)) / 2,
                 ProjectJob = Jobs.ElementAt(_rng.Next() % 4),

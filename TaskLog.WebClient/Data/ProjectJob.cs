@@ -1,8 +1,10 @@
-﻿namespace TaskLog.WebClient.Data
+﻿using System;
+
+namespace TaskLog.WebClient.Data
 {
     public class ProjectJob
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
         public string DefaultColor { get; set; }

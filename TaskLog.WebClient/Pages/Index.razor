@@ -19,6 +19,21 @@
         flex-direction: column;
         width: 160px;
     }
+
+    .floatBtn {
+        position: fixed;
+        bottom: 100px;
+        right: 100px;
+        height: 50px;
+        line-height: 50px;
+        width: 50px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 50%;
+        background-color: DODGERBLUE;
+        color: white;
+        text-align: center;
+    }
 </style>
 
 <div class="sidenav">
@@ -38,18 +53,34 @@
     <TaskDayView DayDate="@DateTime.Now.AddDays(2).ToShortDateString()" />
 </TaskWeekView>
 
+<button class="floatBtn" type="button" @onclick="AddTask"><i class="oi oi-plus"></i></button>
+
 @code {
     List<JobTask> Tasks { get; set; }
     List<ProjectJob> Jobs { get; set; }
 
     protected override void OnInitialized()
     {
-        Jobs = WeatherForecastService.Jobs.ToList();
-        Tasks = WeatherForecastService.Tasks.ToList();
+        ForecastService.LoadJobs();
+        ForecastService.LoadTasks();
+        Jobs = ForecastService.Jobs.ToList();
+        Tasks = ForecastService.Tasks.ToList();
     }
 
     void HandleDateChanged(JobTask jobTask)
     {
-        WeatherForecastService.SaveTasks(Tasks.ToArray());
+        ForecastService.SaveTasks(Tasks.ToArray());
+    }
+
+    void AddTask()
+    {
+        Tasks.Add(new JobTask() {
+            ProjectJob = Jobs.OrderByDescending(x=>x.Id).FirstOrDefault(),
+            Hours = 0.5,
+            Date = DateTime.Today,
+            TaskType = TaskType.Normal,
+            Id = Guid.NewGuid(),
+        });
+        StateHasChanged();
     }
 }
