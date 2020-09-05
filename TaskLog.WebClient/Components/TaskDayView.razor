@@ -1,30 +1,9 @@
 ﻿@inject DataService DataService
-<style>
-    .taskDay {
-        display: flex;
-        flex-direction: column;
-    }
 
-    .dayDropzone {
-        padding: 3px;
-        border: 1px dashed #75868a;
-        list-style: none;
-        min-height: 100px;
-    }
-
-    .no-drop {
-        border: 1px dashed red;
-    }
-
-    .can-drop {
-        border: 1px dashed green;
-    }
-</style>
-
-<div class="taskDay">
+<div class="task-day-container">
     <h3>@DayDate (@_dayTasks.Sum(x => x.Hours))</h3>
 
-    <ul class="dayDropzone @_dropClass"
+    <ul class="task-day-dropzone @_dropClass"
         ondragover="event.preventDefault();"
         ondragstart="event.dataTransfer.setData('', event.target.id);"
         @ondrop="HandleDrop"

@@ -1,42 +1,7 @@
 ﻿@page "/"
 @inject DataService DataService
 
-<style>
-    .sidenav {
-        height: 100%;
-        width: 160px;
-        position: fixed;
-        z-index: 0;
-        top: 0;
-        left: 0;
-        overflow-x: hidden;
-        padding-top: 20px;
-    }
-
-    .job-container {
-        display: flex;
-        justify-content: space-around;
-        flex-direction: column;
-        width: 160px;
-    }
-
-    .floatBtn {
-        position: fixed;
-        bottom: 100px;
-        right: 100px;
-        height: 50px;
-        line-height: 50px;
-        width: 50px;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 50%;
-        background-color: DODGERBLUE;
-        color: white;
-        text-align: center;
-    }
-</style>
-
-<div class="sidenav">
+<div class="job-side-nav">
     <div class="job-container">
         @foreach (var job in Jobs)
         {
@@ -53,7 +18,7 @@
     <TaskDayView DayDate="@DateTime.Now.AddDays(2).ToShortDateString()" />
 </TaskWeekView>
 
-<button class="floatBtn" type="button" @onclick="AddTask"><i class="oi oi-plus"></i></button>
+<button class="float-btn" type="button" @onclick="AddTask"><i class="oi oi-plus"></i></button>
 
 @code {
     List<JobTask> Tasks { get; set; }

@@ -1,15 +1,6 @@
 ﻿@inject TaskDragStateHandler TaskDragStateHandler
 
-<style>
-    .week-container {
-        display: flex;
-        margin-left: 160px;
-        justify-content: space-around;
-        flex-direction: row;
-    }
-</style>
-
-<div class="week-container">
+<div class="task-week-container">
     <CascadingValue Value="this">
         @ChildContent
     </CascadingValue>

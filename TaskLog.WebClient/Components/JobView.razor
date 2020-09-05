@@ -1,31 +1,6 @@
 ﻿@inject TaskDragStateHandler TaskDragStateHandler
-<style>
-    .jobItem {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .jobDropzone {
-        padding: 3px;
-        border: 1px dashed #75868a;
-        list-style: none;
-        width: 200px;
-        /*min-height: 100px;*/
-    }
-
-    .no-drop {
-        border: 1px dashed red;
-        background: BISQUE;
-    }
-
-    .can-drop {
-        border: 1px dashed green;
-        background: HONEYDEW;
-    }
-</style>
-
-<div class="jobItem">
-    <div class="jobDropzone @dropClass"
+<div class="job-item">
+    <div class="job-dropzone @dropClass"
          ondragover="event.preventDefault();"
          ondragstart="event.dataTransfer.setData('', event.target.id);"
          @ondrop="HandleDrop"

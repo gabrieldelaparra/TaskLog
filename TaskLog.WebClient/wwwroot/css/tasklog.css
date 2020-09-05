@@ -1,0 +1,103 @@
+﻿.job-side-nav {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.job-container {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    width: 160px;
+}
+
+.float-btn {
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+    height: 50px;
+    line-height: 50px;
+    width: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 50%;
+    background-color: DODGERBLUE;
+    color: white;
+    text-align: center;
+}
+
+.job-item {
+    display: flex;
+    flex-direction: row;
+}
+
+.job-dropzone {
+    padding: 3px;
+    border: 1px dashed #75868a;
+    list-style: none;
+    width: 200px;
+    /*min-height: 100px;*/
+}
+
+.no-drop {
+    border: 1px dashed red;
+    background: BISQUE;
+}
+
+.can-drop {
+    border: 1px dashed green;
+    background: HONEYDEW;
+}
+
+.task-day-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-day-dropzone {
+    padding: 3px;
+    border: 1px dashed #75868a;
+    list-style: none;
+    min-height: 100px;
+}
+
+.hours-input {
+    background-color: transparent;
+    border: 0px solid;
+}
+
+.draggable {
+    cursor: grab;
+}
+
+.draggable:active {
+    cursor: grabbing;
+}
+
+.dragging {
+    cursor: grabbing;
+}
+
+.task-type-badge {
+    border: 0
+}
+
+.task-type-badge:focus {
+    outline: 0;
+}
+
+.al-cnt {
+    align-items: center;
+}
+
+.task-week-container {
+    display: flex;
+    margin-left: 160px;
+    justify-content: space-around;
+    flex-direction: row;
+}
