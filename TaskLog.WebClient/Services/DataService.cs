@@ -8,13 +8,11 @@ using TaskLog.WebClient.Models;
 
 namespace TaskLog.WebClient.Services
 {
-    public class WeatherForecastService
+    public class DataService
     {
         private const string JobFile = "jobs.json";
         private const string TaskFile = "tasks.json";
         readonly Calendar _calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
-        private int id = 0;
-
 
         public int GetCurrentCalendarWeek()
         {
@@ -51,10 +49,9 @@ namespace TaskLog.WebClient.Services
             }
             else {
                 var tasks = new List<JobTask>();
-                tasks.AddRange(GetJobTasks(DateTime.Now));
-                tasks.AddRange(GetJobTasks(DateTime.Now.AddDays(-1)));
-                tasks.AddRange(GetJobTasks(DateTime.Now.AddDays(+5)));
-                tasks.AddRange(GetJobTasks(DateTime.Now.AddDays(+2)));
+                tasks.AddRange(GetSampleJobTasks(DateTime.Now));
+                tasks.AddRange(GetSampleJobTasks(DateTime.Now.AddDays(-1)));
+                tasks.AddRange(GetSampleJobTasks(DateTime.Now.AddDays(+2)));
                 Tasks = tasks.ToList();
                 SaveTasks(Tasks);
             }
@@ -62,14 +59,14 @@ namespace TaskLog.WebClient.Services
 
         public IEnumerable<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
         public IEnumerable<JobTask> Tasks { get; set; } = new List<JobTask>();
-        public JobTask[] GetJobTasks(DateTime taskTime)
+        public JobTask[] GetSampleJobTasks(DateTime taskTime)
         {
-            return Enumerable.Range(1, 5).Select(index => GetJobTask(taskTime)).ToArray();
+            return Enumerable.Range(1, 5).Select(index => GetSampleJobTask(taskTime)).ToArray();
         }
 
         private readonly Random _rng = new Random();
 
-        public JobTask GetJobTask(DateTime taskTime)
+        public JobTask GetSampleJobTask(DateTime taskTime)
         {
             return new JobTask()
             {

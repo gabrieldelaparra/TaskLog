@@ -24,7 +24,7 @@ namespace TaskLog.WebClient
             services.AddServerSideBlazor(config => {
                 config.DetailedErrors = true;
             });
-            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<DataService>();
             services.AddSingleton<TaskDragStateHandler>();
         }
 

@@ -1,6 +1,4 @@
-﻿@using TaskLog.WebClient.Models
-@using TaskLog.WebClient.Services
-@inject WeatherForecastService ForecastService
+﻿@inject DataService DataService
 <style>
     .taskDay {
         display: flex;
@@ -61,7 +59,7 @@
     {
         StateHasChanged();
         //TODO: Have this only once somewhere, currently in several places
-        ForecastService.SaveTasks(TaskWeek.Tasks.ToArray());
+        DataService.SaveTasks(TaskWeek.Tasks.ToArray());
     }
 
     private void HandleDragEnter()

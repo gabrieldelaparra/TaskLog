@@ -1,7 +1,5 @@
 ﻿@page "/"
-@using TaskLog.WebClient.Models
-@using TaskLog.WebClient.Services
-@inject WeatherForecastService ForecastService
+@inject DataService DataService
 
 <style>
     .sidenav {
@@ -63,15 +61,15 @@
 
     protected override void OnInitialized()
     {
-        ForecastService.LoadJobs();
-        ForecastService.LoadTasks();
-        Jobs = ForecastService.Jobs.ToList();
-        Tasks = ForecastService.Tasks.ToList();
+        DataService.LoadJobs();
+        DataService.LoadTasks();
+        Jobs = DataService.Jobs.ToList();
+        Tasks = DataService.Tasks.ToList();
     }
 
     void HandleDateChanged(JobTask jobTask)
     {
-        ForecastService.SaveTasks(Tasks.ToArray());
+        DataService.SaveTasks(Tasks.ToArray());
     }
 
     void AddTask()
