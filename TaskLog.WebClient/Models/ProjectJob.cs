@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TaskLog.WebClient.Data
+namespace TaskLog.WebClient.Models
 {
     public class ProjectJob
     {

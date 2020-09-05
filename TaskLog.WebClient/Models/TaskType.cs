@@ -1,4 +1,4 @@
-﻿namespace TaskLog.WebClient.Data
+﻿namespace TaskLog.WebClient.Models
 {
     public enum TaskType
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using TaskLog.WebClient.Pages;
+using TaskLog.WebClient.Components;
 
-namespace TaskLog.WebClient.Data
+namespace TaskLog.WebClient.Services
 {
     public class TaskDragStateHandler
     {
