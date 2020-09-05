@@ -3,7 +3,7 @@
 <div class="task-day-container">
     <h3>@DayDate (@_dayTasks.Sum(x => x.Hours))</h3>
 
-    <ul class="task-day-dropzone @_dropClass"
+    <div class="dropzone day-dropzone @_dropClass"
         ondragover="event.preventDefault();"
         ondragstart="event.dataTransfer.setData('', event.target.id);"
         @ondrop="HandleDrop"
@@ -15,7 +15,7 @@
             <TaskView JobTask="jobTask" OnDataChanged="HandleDataChanged" />
         }
 
-    </ul>
+    </div>
 </div>
 
 @code {

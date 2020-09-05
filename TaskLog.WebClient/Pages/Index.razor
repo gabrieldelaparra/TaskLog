@@ -18,7 +18,9 @@
     <TaskDayView DayDate="@DateTime.Now.AddDays(2).ToShortDateString()" />
 </TaskWeekView>
 
-<button class="float-btn" type="button" @onclick="AddTask"><i class="oi oi-plus"></i></button>
+<button class="float-btn" type="button" @onclick="AddTask"><i class="oi oi-plus" /></button>
+
+<RemoveTaskDropZone />
 
 @code {
     List<JobTask> Tasks { get; set; }

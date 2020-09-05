@@ -30,7 +30,7 @@ namespace TaskLog.WebClient.Services
             if (File.Exists(JobFile))
             {
                 var jobsJson = System.IO.File.ReadAllText(JobFile);
-                Jobs = JsonSerializer.Deserialize<ProjectJob[]>(jobsJson);
+                Jobs = JsonSerializer.Deserialize<ProjectJob[]>(jobsJson).ToList();
             }
         }
 
@@ -45,7 +45,7 @@ namespace TaskLog.WebClient.Services
             if (File.Exists(TaskFile))
             {
                 var taskJson = System.IO.File.ReadAllText(TaskFile);
-                Tasks = JsonSerializer.Deserialize<JobTask[]>(taskJson);
+                Tasks = JsonSerializer.Deserialize<JobTask[]>(taskJson).ToList();
             }
             else {
                 var tasks = new List<JobTask>();
@@ -57,8 +57,14 @@ namespace TaskLog.WebClient.Services
             }
         }
 
-        public IEnumerable<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
-        public IEnumerable<JobTask> Tasks { get; set; } = new List<JobTask>();
+        public void RemoveTask(JobTask task)
+        {
+            Tasks.Remove(task);
+            SaveTasks(Tasks);
+        }
+
+        public List<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
+        public List<JobTask> Tasks { get; set; } = new List<JobTask>();
         public JobTask[] GetSampleJobTasks(DateTime taskTime)
         {
             return Enumerable.Range(1, 5).Select(index => GetSampleJobTask(taskTime)).ToArray();

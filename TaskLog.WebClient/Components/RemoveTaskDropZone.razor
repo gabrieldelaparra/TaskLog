@@ -1,0 +1,34 @@
+﻿@inject DataService DataService
+@inject TaskDragStateHandler TaskDragStateHandler
+
+<div class="dropzone remove-dropzone @_dropClass"
+     ondragover="event.preventDefault();"
+     ondragstart="event.dataTransfer.setData('', event.target.id);"
+     @ondrop="HandleDrop"
+     @ondragenter="HandleDragEnter"
+     @ondragleave="HandleDragLeave">
+    <i class="oi oi-trash" />
+</div>
+
+@code {
+    private string _dropClass = "";
+
+    private void HandleDragEnter()
+    {
+        _dropClass = "remove-dropzone-over";
+    }
+
+    private void HandleDragLeave()
+    {
+        _dropClass = "";
+    }
+
+    private async Task HandleDrop()
+    {
+        _dropClass = "";
+        //Needs to happen on the Week, because it contains all tasks, it will also handle
+        //The destination day movement (it is not ok to be handled here, but could be done).
+        DataService.RemoveTask(TaskDragStateHandler.TaskView.JobTask);
+        StateHasChanged();
+    }
+}

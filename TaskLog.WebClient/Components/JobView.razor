@@ -1,6 +1,6 @@
 ﻿@inject TaskDragStateHandler TaskDragStateHandler
 <div class="job-item">
-    <div class="job-dropzone @dropClass"
+    <div class="dropzone job-dropzone @dropClass"
          ondragover="event.preventDefault();"
          ondragstart="event.dataTransfer.setData('', event.target.id);"
          @ondrop="HandleDrop"
