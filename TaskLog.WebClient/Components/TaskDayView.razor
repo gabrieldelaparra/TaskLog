@@ -3,8 +3,8 @@
 @implements IDisposable
 
 <div class="task-day-container">
-    <h5>@DayDate.DayOfWeek</h5>
-    <h6>@DayDate.ToString("yyyy.MM.dd") (@_dayTasks.Sum(x => x.Hours))</h6>
+    <h5>@DayDate.DayOfWeek (@_dayTasks.Sum(x => x.Hours))</h5>
+    <h6>@DayDate.ToString("yyyy.MM.dd")@IsToday</h6>
 
     <div class="dropzone day-dropzone @_dropClass"
          ondragover="event.preventDefault();"
@@ -26,9 +26,10 @@
 
     private readonly List<JobTask> _dayTasks = new List<JobTask>();
     private string _dropClass = "";
+    private string IsToday => DayDate.Date == DateTime.Today ? " (Today)" : string.Empty;
 
     //Called when the Parameter DayDate is set;
-    protected override void OnParametersSet()
+        protected override void OnParametersSet()
     {
         _dayTasks.Clear();
         _dayTasks.AddRange(DataService.Tasks.Where(x => x.Date == DayDate.Date));
