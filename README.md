@@ -33,3 +33,4 @@ I use this to track my daily tasks and create some reports for my work.
 - Implement a state handling pattern (Currently it is just hacked there)
 - Improve the UI design
 - Implement a DB to stop using the json files (privacy, right)
+- More on [issues](https://github.com/gabrieldelaparra/TaskLog/issues)
