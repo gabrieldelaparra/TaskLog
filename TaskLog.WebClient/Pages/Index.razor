@@ -11,13 +11,15 @@
     </div>
 </div>
 
-<TaskWeekView>
-    <TaskDayView DayDate="@DateTime.Now.AddDays(-2).ToShortDateString()" />
-    <TaskDayView DayDate="@DateTime.Now.AddDays(-1).ToShortDateString()" />
-    <TaskDayView DayDate="@DateTime.Now.ToShortDateString()" />
-    <TaskDayView DayDate="@DateTime.Now.AddDays(1).ToShortDateString()" />
+@*<TaskWeekView>*@
+    <div class="task-week-container">
+        <TaskDayView DayDate="@DateTime.Now.AddDays(-2).ToShortDateString()" />
+        <TaskDayView DayDate="@DateTime.Now.AddDays(-1).ToShortDateString()" />
+        <TaskDayView DayDate="@DateTime.Now.ToShortDateString()" />
+        <TaskDayView DayDate="@DateTime.Now.AddDays(1).ToShortDateString()" />
     <TaskDayView DayDate="@DateTime.Now.AddDays(2).ToShortDateString()" />
-</TaskWeekView>
+    </div>
+@*</TaskWeekView>*@
 
 <button class="float-btn" type="button" @onclick="DataService.AddNewTask"><i class="oi oi-plus" /></button>
 
