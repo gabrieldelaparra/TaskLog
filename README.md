@@ -7,6 +7,14 @@ I use this to track my daily tasks and create some reports for my work.
 
 ## Usage
 
+1. Clone
+2. `cd TaskLog\TaskLog.WebClient`
+3. `dotnet build`
+4. `dotnet run`
+5. Open a webbrowser in the address showed in the console (default: `https://localhost:5001`)
+
+## Features
+
 - Allows to create a task (by pressing the + button)
 - Allows to remove a task by dragging it to the trash
 - Allows to assing the task a different job (left bar)
