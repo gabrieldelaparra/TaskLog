@@ -1,4 +1,5 @@
 ﻿@inject TaskDragStateHandler TaskDragStateHandler
+@inject DataService DataService
 
 <div class="border rounded m-2 px-1" style=" width: 16rem;
         background: @JobTask.ProjectJob.DefaultColor;
@@ -50,18 +51,22 @@
         set
         {
             JobTask.Hours = value;
-            UpdateState();
+            OnHoursChanged?.Invoke();
+            DataService.SaveTasks();
+            //UpdateState();
         }
     }
+
+    [Parameter] public Action OnHoursChanged { get; set; }
 
     //I need this for 2 reasons:
     //1. To call if from outside (sideNav after updating the job)
     //2. To tell the parent to save; (this could be done by Cascading);
-    [Parameter] public Action OnDataChanged { get; set; }
-    public void UpdateState()
+    //[Parameter] public Action OnDataChanged { get; set; }
+
+    public void UpdateJob()
     {
         StateHasChanged();
-        OnDataChanged.Invoke();
     }
 
     //TODO: Refactor out
@@ -88,7 +93,7 @@
     {
         var currentIndex = (int)JobTask.TaskType;
         JobTask.TaskType = (TaskType)(++currentIndex % 5);
-        UpdateState();
+        UpdateJob();
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject DataService DataService
+@implements IDisposable
 
 <div class="job-side-nav">
     <div class="job-container">
@@ -10,7 +11,7 @@
     </div>
 </div>
 
-<TaskWeekView Tasks="Tasks" OnDateChanged="HandleDateChanged">
+<TaskWeekView>
     <TaskDayView DayDate="@DateTime.Now.AddDays(-2).ToShortDateString()" />
     <TaskDayView DayDate="@DateTime.Now.AddDays(-1).ToShortDateString()" />
     <TaskDayView DayDate="@DateTime.Now.ToShortDateString()" />
@@ -18,7 +19,7 @@
     <TaskDayView DayDate="@DateTime.Now.AddDays(2).ToShortDateString()" />
 </TaskWeekView>
 
-<button class="float-btn" type="button" @onclick="AddTask"><i class="oi oi-plus" /></button>
+<button class="float-btn" type="button" @onclick="DataService.AddNewTask"><i class="oi oi-plus" /></button>
 
 <RemoveTaskDropZone />
 
@@ -32,22 +33,16 @@
         DataService.LoadTasks();
         Jobs = DataService.Jobs.ToList();
         Tasks = DataService.Tasks.ToList();
+        DataService.OnDataChanged += HandleDateChanged;
     }
 
-    void HandleDateChanged(JobTask jobTask)
+    void HandleDateChanged()
     {
-        DataService.SaveTasks(Tasks.ToArray());
-    }
-
-    void AddTask()
-    {
-        Tasks.Add(new JobTask() {
-            ProjectJob = Jobs.OrderByDescending(x=>x.Id).FirstOrDefault(),
-            Hours = 0.5,
-            Date = DateTime.Today,
-            TaskType = TaskType.Normal,
-            Id = Guid.NewGuid(),
-        });
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        DataService.OnDataChanged -= HandleDateChanged;
     }
 }

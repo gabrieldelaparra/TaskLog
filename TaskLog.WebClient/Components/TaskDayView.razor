@@ -1,18 +1,20 @@
 ﻿@inject DataService DataService
+@inject TaskDragStateHandler TaskDragStateHandler
+@implements IDisposable
 
 <div class="task-day-container">
     <h3>@DayDate (@_dayTasks.Sum(x => x.Hours))</h3>
 
     <div class="dropzone day-dropzone @_dropClass"
-        ondragover="event.preventDefault();"
-        ondragstart="event.dataTransfer.setData('', event.target.id);"
-        @ondrop="HandleDrop"
-        @ondragenter="HandleDragEnter"
-        @ondragleave="HandleDragLeave">
+         ondragover="event.preventDefault();"
+         ondragstart="event.dataTransfer.setData('', event.target.id);"
+         @ondrop="HandleDrop"
+         @ondragenter="HandleDragEnter"
+         @ondragleave="HandleDragLeave">
 
         @foreach (var jobTask in _dayTasks)
         {
-            <TaskView JobTask="jobTask" OnDataChanged="HandleDataChanged" />
+            <TaskView JobTask="jobTask" OnHoursChanged="HandleTaskHoursChanged" />
         }
 
     </div>
@@ -20,8 +22,6 @@
 
 @code {
 
-    //Needed to get all the tasks: easier this way.
-    [CascadingParameter] TaskWeekView TaskWeek { get; set; }
     [Parameter] public string DayDate { get; set; }
 
     private readonly List<JobTask> _dayTasks = new List<JobTask>();
@@ -31,20 +31,18 @@
     protected override void OnParametersSet()
     {
         _dayTasks.Clear();
-        _dayTasks.AddRange(TaskWeek.Tasks.Where(x => x.Date.ToShortDateString() == DayDate));
+        _dayTasks.AddRange(DataService.Tasks.Where(x => x.Date.ToShortDateString() == DayDate));
     }
 
-    private void HandleDataChanged()
+    public void HandleTaskHoursChanged()
     {
         StateHasChanged();
-        //TODO: Have this only once somewhere, currently in several places
-        DataService.SaveTasks(TaskWeek.Tasks.ToArray());
     }
 
     private void HandleDragEnter()
     {
         //If the task is already there, do nothing;
-        if (DayDate == TaskWeek.DraggedTask.Date.ToShortDateString())
+        if (DayDate == TaskDragStateHandler.TaskView.JobTask.Date.ToShortDateString())
             return;
 
         _dropClass = "can-drop";
@@ -55,11 +53,25 @@
         _dropClass = "";
     }
 
-    private async Task HandleDrop()
+    private void HandleDrop()
     {
         _dropClass = "";
-        //Needs to happen on the Week, because it contains all tasks, it will also handle
-        //The destination day movement (it is not ok to be handled here, but could be done).
-        await TaskWeek.MoveToNewDate(DayDate);
+        DataService.MoveToNewDay(TaskDragStateHandler.TaskView.JobTask, DayDate);
+    }
+
+    protected override void OnInitialized()
+    {
+        DataService.OnDataChanged += HandleDateChanged;
+    }
+
+    public void Dispose()
+    {
+        DataService.OnDataChanged -= HandleDateChanged;
+    }
+
+    void HandleDateChanged()
+    {
+        OnParametersSet();
+        StateHasChanged();
     }
 }

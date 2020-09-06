@@ -53,13 +53,43 @@ namespace TaskLog.WebClient.Services
                 tasks.AddRange(GetSampleJobTasks(DateTime.Now.AddDays(-1)));
                 tasks.AddRange(GetSampleJobTasks(DateTime.Now.AddDays(+2)));
                 Tasks = tasks.ToList();
+                OnDataChanged?.Invoke();
                 SaveTasks(Tasks);
             }
+        }
+
+        public void SaveTasks()
+        {
+            SaveTasks(Tasks);
+        }
+
+        public event Action OnDataChanged;
+
+        public void AddNewTask()
+        {
+            Tasks.Add(new JobTask()
+            {
+                ProjectJob = Jobs.OrderByDescending(x => x.Id).FirstOrDefault(),
+                Hours = 0.5,
+                Date = DateTime.Today,
+                TaskType = TaskType.Normal,
+                Id = Guid.NewGuid(),
+            });
+            OnDataChanged?.Invoke();
+            SaveTasks(Tasks);
+        }
+
+        public void MoveToNewDay(JobTask task, string newTaskDate)
+        {
+            task.Date = DateTime.Parse(newTaskDate);
+            OnDataChanged?.Invoke();
+            SaveTasks(Tasks);
         }
 
         public void RemoveTask(JobTask task)
         {
             Tasks.Remove(task);
+            OnDataChanged?.Invoke();
             SaveTasks(Tasks);
         }
 
