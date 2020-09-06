@@ -11,23 +11,79 @@
     </div>
 </div>
 
-@*<TaskWeekView>*@
-    <div class="task-week-container">
-        <TaskDayView DayDate="@DateTime.Now.AddDays(-2).ToShortDateString()" />
-        <TaskDayView DayDate="@DateTime.Now.AddDays(-1).ToShortDateString()" />
-        <TaskDayView DayDate="@DateTime.Now.ToShortDateString()" />
-        <TaskDayView DayDate="@DateTime.Now.AddDays(1).ToShortDateString()" />
-    <TaskDayView DayDate="@DateTime.Now.AddDays(2).ToShortDateString()" />
-    </div>
-@*</TaskWeekView>*@
+<button class="float-btn" type="button" style="top: 20px;
+        right: 30px;
+        height: 30px;
+        width: 30px;
+        line-height: 30pX; background-color: MEDIUMSEAGREEN;" @onclick="IncreaseDay">
+    <i class="oi oi-chevron-right" />
+</button>
+<button class="float-btn" type="button" style="top: 20px;
+        left: 165px;
+        height: 30px;
+        width: 30px;
+        line-height: 30pX;
+        background-color: MEDIUMSEAGREEN;" @onclick="DecreaseDay">
+    <i class="oi oi-chevron-left" />
+</button>
 
-<button class="float-btn" type="button" @onclick="DataService.AddNewTask"><i class="oi oi-plus" /></button>
+<div class="task-week-container">
+    <TaskDayView DayDate="@getDay(-2)" />
+    <TaskDayView DayDate="@getDay(-1)" />
+    <TaskDayView DayDate="@getDay(0)" />
+    <TaskDayView DayDate="@getDay(+1)" />
+    <TaskDayView DayDate="@getDay(+2)" />
+</div>
+
+<button class="float-btn" type="button" @onclick="(()=>DataService.AddNewTask(CurrentDay))"><i class="oi oi-plus" /></button>
 
 <RemoveTaskDropZone />
 
 @code {
     List<JobTask> Tasks { get; set; }
     List<ProjectJob> Jobs { get; set; }
+
+    public int CurrentDay { get; set; }
+    private void IncreaseDay()
+    {
+        CurrentDay++;
+        StateHasChanged();
+    }
+
+    private void DecreaseDay()
+    {
+        CurrentDay--;
+        StateHasChanged();
+    }
+
+    DateTime getDay(int offset)
+    {
+        var today = DateTime.Today;
+        //if (today.DayOfWeek.Equals(DayOfWeek.Saturday) || today.DayOfWeek.Equals(DayOfWeek.Sunday))
+        //{
+        //    if (offset >= 0)
+        //        offset++;
+        //}
+        var offsetDate = today.AddDays(CurrentDay);
+        return offsetDate.AddDays(offset);
+        //return AddBusinessDays(offsetDate, offset);
+    }
+
+    public DateTime AddBusinessDays(DateTime current, int days)
+    {
+        var sign = Math.Sign(days);
+        var unsignedDays = Math.Abs(days);
+        for (var i = 0; i < unsignedDays; i++)
+        {
+            do
+            {
+                current = current.AddDays(sign);
+            }
+            while (current.DayOfWeek == DayOfWeek.Saturday ||
+                   current.DayOfWeek == DayOfWeek.Sunday);
+        }
+        return current;
+    }
 
     protected override void OnInitialized()
     {

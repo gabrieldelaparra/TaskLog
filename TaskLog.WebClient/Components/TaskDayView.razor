@@ -3,7 +3,8 @@
 @implements IDisposable
 
 <div class="task-day-container">
-    <h3>@DayDate (@_dayTasks.Sum(x => x.Hours))</h3>
+    <h5>@DayDate.DayOfWeek</h5>
+    <h6>@DayDate.ToString("yyyy.MM.dd") (@_dayTasks.Sum(x => x.Hours))</h6>
 
     <div class="dropzone day-dropzone @_dropClass"
          ondragover="event.preventDefault();"
@@ -12,9 +13,8 @@
          @ondragenter="HandleDragEnter"
          @ondragleave="HandleDragLeave">
 
-        @foreach (var jobTask in _dayTasks)
-        {
-            <TaskView JobTask="jobTask" OnHoursChanged="HandleTaskHoursChanged" />
+        @foreach (var jobTask in _dayTasks) {
+            <TaskView JobTask="jobTask" OnHoursChanged="HandleTaskHoursChanged"/>
         }
 
     </div>
@@ -22,7 +22,7 @@
 
 @code {
 
-    [Parameter] public string DayDate { get; set; }
+    [Parameter] public DateTime DayDate { get; set; }
 
     private readonly List<JobTask> _dayTasks = new List<JobTask>();
     private string _dropClass = "";
@@ -31,7 +31,7 @@
     protected override void OnParametersSet()
     {
         _dayTasks.Clear();
-        _dayTasks.AddRange(DataService.Tasks.Where(x => x.Date.ToShortDateString() == DayDate));
+        _dayTasks.AddRange(DataService.Tasks.Where(x => x.Date == DayDate.Date));
     }
 
     public void HandleTaskHoursChanged()
@@ -42,7 +42,7 @@
     private void HandleDragEnter()
     {
         //If the task is already there, do nothing;
-        if (DayDate == TaskDragStateHandler.TaskView.JobTask.Date.ToShortDateString())
+        if (DayDate == TaskDragStateHandler.TaskView.JobTask.Date)
             return;
 
         _dropClass = "can-drop";

@@ -65,13 +65,13 @@ namespace TaskLog.WebClient.Services
 
         public event Action OnDataChanged;
 
-        public void AddNewTask()
+        public void AddNewTask(int offset)
         {
             Tasks.Add(new JobTask()
             {
                 ProjectJob = Jobs.OrderByDescending(x => x.Id).FirstOrDefault(),
                 Hours = 0.5,
-                Date = DateTime.Today,
+                Date = DateTime.Today.AddDays(offset),
                 TaskType = TaskType.Normal,
                 Id = Guid.NewGuid(),
             });
@@ -79,9 +79,9 @@ namespace TaskLog.WebClient.Services
             SaveTasks(Tasks);
         }
 
-        public void MoveToNewDay(JobTask task, string newTaskDate)
+        public void MoveToNewDay(JobTask task, DateTime newTaskDate)
         {
-            task.Date = DateTime.Parse(newTaskDate);
+            task.Date = newTaskDate.Date;
             OnDataChanged?.Invoke();
             SaveTasks(Tasks);
         }
