@@ -16,9 +16,11 @@ I use this to track my daily tasks and create some reports for my work.
 ## Features
 
 - Allows to create a task (by pressing the + button)
-- Allows to remove a task by dragging it to the trash
-- Allows to assing the task a different job (left bar)
-- Allows to move on the date, using the top left/right buttons
+- Allows to remove a task by dragging it to the trash icon
+- Allows to change the given hours for a specific task. The sum is displayed for the day
+- Allows to assing the task a different job, by dragging the task to the job on the left bar
+- Allows to move the current displayed date, using the top left/right buttons
+- Allows to move a task to a differnt date, by draging it to a new day
 - New jobs are added to the jobs.json (yes, manually)
 
 ## Sample
