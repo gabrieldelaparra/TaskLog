@@ -47,46 +47,31 @@
     private void IncreaseDay()
     {
         CurrentDay++;
+        if (DateTime.Today.AddDays(CurrentDay).DayOfWeek.Equals(DayOfWeek.Saturday))
+            CurrentDay++;
+        if (DateTime.Today.AddDays(CurrentDay).DayOfWeek.Equals(DayOfWeek.Sunday))
+            CurrentDay++;
         StateHasChanged();
     }
 
     private void DecreaseDay()
     {
         CurrentDay--;
+        if(DateTime.Today.AddDays(CurrentDay).DayOfWeek.Equals(DayOfWeek.Sunday))
+            CurrentDay--;
+        if (DateTime.Today.AddDays(CurrentDay).DayOfWeek.Equals(DayOfWeek.Saturday))
+            CurrentDay--;
         StateHasChanged();
     }
 
-    DateTime getDay(int offset)
+    DateTime getDay(int extraDays)
     {
-        var today = DateTime.Today;
-        //if (today.DayOfWeek.Equals(DayOfWeek.Saturday) || today.DayOfWeek.Equals(DayOfWeek.Sunday))
-        //{
-        //    if (offset >= 0)
-        //        offset++;
-        //}
-        var offsetDate = today.AddDays(CurrentDay);
-        return offsetDate.AddDays(offset);
-        //return AddBusinessDays(offsetDate, offset);
-    }
-
-    public DateTime AddBusinessDays(DateTime current, int days)
-    {
-        var sign = Math.Sign(days);
-        var unsignedDays = Math.Abs(days);
-        for (var i = 0; i < unsignedDays; i++)
-        {
-            do
-            {
-                current = current.AddDays(sign);
-            }
-            while (current.DayOfWeek == DayOfWeek.Saturday ||
-                   current.DayOfWeek == DayOfWeek.Sunday);
-        }
-        return current;
+        return DataService.AddBusinessDays(DateTime.Today, CurrentDay, extraDays);
     }
 
     protected override void OnInitialized()
     {
+        //First jobs, then tasks:
         DataService.LoadJobs();
         DataService.LoadTasks();
         Jobs = DataService.Jobs.ToList();

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -14,14 +13,15 @@ namespace TaskLog.WebClient.Services
     {
         private const string JobFile = "jobs.json";
         private const string TaskFile = "tasks.json";
-        public DateTime AddBusinessDays(int offset, int extraDays)
+        public DateTime AddBusinessDays(DateTime dateTime, int offset, int extraDays)
         {
-            var current = DateTime.Now.AddDays(offset);
-            if (current.DayOfWeek.Equals(DayOfWeek.Saturday) || current.DayOfYear.Equals(DayOfWeek.Sunday))
+            var current = dateTime.AddDays(offset);
+            if (current.DayOfWeek.Equals(DayOfWeek.Saturday) || current.DayOfWeek.Equals(DayOfWeek.Sunday))
             {
-                if (extraDays >= 0)
+                if (extraDays == 0)
                     extraDays++;
             }
+
 
             var sign = Math.Sign(extraDays);
             var unsignedDays = Math.Abs(extraDays);
@@ -59,8 +59,9 @@ namespace TaskLog.WebClient.Services
                 }
                 catch (Exception ex)
                 {
+                    var now = DateTime.Now;
                     Console.WriteLine(ex);
-                    File.Copy(filename, $"{Path.GetFileNameWithoutExtension(filename)}_backup_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.{Path.GetExtension(filename)}");
+                    File.Copy(filename, $"{Path.GetFileNameWithoutExtension(filename)}_backup_{now.ToShortDateString()}_{now.ToShortTimeString()}.{Path.GetExtension(filename)}");
                     Jobs = CreateSampleJobs().ToList();
                 }
             }
@@ -92,8 +93,9 @@ namespace TaskLog.WebClient.Services
                 }
                 catch (Exception ex)
                 {
+                    var now = DateTime.Now;
                     Console.WriteLine(ex);
-                    File.Copy(filename, $"{Path.GetFileNameWithoutExtension(filename)}_backup_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.{Path.GetExtension(filename)}");
+                    File.Copy(filename, $"{Path.GetFileNameWithoutExtension(filename)}_backup_{now.ToShortDateString()}_{now.ToShortTimeString()}.{Path.GetExtension(filename)}");
                     Tasks = CreateSampleTasks().ToList();
                 }
             }
@@ -117,7 +119,7 @@ namespace TaskLog.WebClient.Services
                 ProjectJob = Jobs.OrderBy(x => x.Id).FirstOrDefault(),
                 Hours = 0.5,
                 //TODO: Take business days into consideration. Issue #4
-                Date = DateTime.Today.AddDays(offset),
+                Date = AddBusinessDays(DateTime.Today, offset, 0),
                 TaskType = TaskType.Normal,
                 Id = Guid.NewGuid(),
             });
@@ -146,19 +148,18 @@ namespace TaskLog.WebClient.Services
             return Enumerable.Range(1, 5).Select(index => GetSampleJobTask(taskTime));
         }
 
-        //TODO: Use business days only. Issue #4
         private IEnumerable<JobTask> CreateSampleTasks()
         {
             var tasks = new List<JobTask>();
-            tasks.AddRange(GetSampleDayTasks(DateTime.Now));
-            tasks.AddRange(GetSampleDayTasks(DateTime.Now.AddDays(-1)));
-            tasks.AddRange(GetSampleDayTasks(DateTime.Now.AddDays(+2)));
+            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, 0)));
+            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, -1)));
+            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, +2)));
             return tasks;
         }
 
         private readonly Random _random = new Random();
 
-        public JobTask GetSampleJobTask(DateTime taskTime)
+        private JobTask GetSampleJobTask(DateTime taskTime)
         {
             return new JobTask()
             {

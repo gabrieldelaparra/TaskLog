@@ -4,7 +4,7 @@ namespace TaskLog.WebClient.Models
 {
     public class JobTask
     {
-        public DateTime Date { get; set; } = DateTime.Now.Date;
+        public DateTime Date { get; set; }
         public string Description { get; set; }
         public double Hours { get; set; }
         public Guid Id { get; set; }
