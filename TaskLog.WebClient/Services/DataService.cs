@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+
 using TaskLog.WebClient.Models;
 
 namespace TaskLog.WebClient.Services
@@ -12,11 +14,27 @@ namespace TaskLog.WebClient.Services
     {
         private const string JobFile = "jobs.json";
         private const string TaskFile = "tasks.json";
-        readonly Calendar _calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
-
-        public int GetCurrentCalendarWeek()
+        public DateTime AddBusinessDays(int offset, int extraDays)
         {
-            return _calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            var current = DateTime.Now.AddDays(offset);
+            if (current.DayOfWeek.Equals(DayOfWeek.Saturday) || current.DayOfYear.Equals(DayOfWeek.Sunday))
+            {
+                if (extraDays >= 0)
+                    extraDays++;
+            }
+
+            var sign = Math.Sign(extraDays);
+            var unsignedDays = Math.Abs(extraDays);
+            for (var i = 0; i < unsignedDays; i++)
+            {
+                do
+                {
+                    current = current.AddDays(sign);
+                }
+                while (current.DayOfWeek == DayOfWeek.Saturday ||
+                       current.DayOfWeek == DayOfWeek.Sunday);
+            }
+            return current;
         }
 
         public void SaveJobs(IEnumerable<ProjectJob> jobs)
@@ -27,10 +45,28 @@ namespace TaskLog.WebClient.Services
 
         public void LoadJobs()
         {
-            if (File.Exists(JobFile))
+            LoadJobs(JobFile);
+        }
+
+        private void LoadJobs(string filename)
+        {
+            if (File.Exists(filename))
             {
-                var jobsJson = System.IO.File.ReadAllText(JobFile);
-                Jobs = JsonSerializer.Deserialize<ProjectJob[]>(jobsJson).ToList();
+                try
+                {
+                    var jobsJson = File.ReadAllText(filename);
+                    Jobs = JsonSerializer.Deserialize<ProjectJob[]>(jobsJson).ToList();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    File.Copy(filename, $"{Path.GetFileNameWithoutExtension(filename)}_backup_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.{Path.GetExtension(filename)}");
+                    Jobs = CreateSampleJobs().ToList();
+                }
+            }
+            else
+            {
+                Jobs = CreateSampleJobs().ToList();
             }
         }
 
@@ -42,19 +78,28 @@ namespace TaskLog.WebClient.Services
 
         public void LoadTasks()
         {
+            LoadTasks(TaskFile);
+        }
+
+        private void LoadTasks(string filename)
+        {
             if (File.Exists(TaskFile))
             {
-                var taskJson = System.IO.File.ReadAllText(TaskFile);
-                Tasks = JsonSerializer.Deserialize<JobTask[]>(taskJson).ToList();
+                try
+                {
+                    var taskJson = File.ReadAllText(filename);
+                    Tasks = JsonSerializer.Deserialize<JobTask[]>(taskJson).ToList();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    File.Copy(filename, $"{Path.GetFileNameWithoutExtension(filename)}_backup_{DateTime.Now.ToShortDateString()}_{DateTime.Now.ToShortTimeString()}.{Path.GetExtension(filename)}");
+                    Tasks = CreateSampleTasks().ToList();
+                }
             }
-            else {
-                var tasks = new List<JobTask>();
-                tasks.AddRange(GetSampleJobTasks(DateTime.Now));
-                tasks.AddRange(GetSampleJobTasks(DateTime.Now.AddDays(-1)));
-                tasks.AddRange(GetSampleJobTasks(DateTime.Now.AddDays(+2)));
-                Tasks = tasks.ToList();
-                OnDataChanged?.Invoke();
-                SaveTasks(Tasks);
+            else
+            {
+                Tasks = CreateSampleTasks().ToList();
             }
         }
 
@@ -69,8 +114,9 @@ namespace TaskLog.WebClient.Services
         {
             Tasks.Add(new JobTask()
             {
-                ProjectJob = Jobs.OrderByDescending(x => x.Id).FirstOrDefault(),
+                ProjectJob = Jobs.OrderBy(x => x.Id).FirstOrDefault(),
                 Hours = 0.5,
+                //TODO: Take business days into consideration. Issue #4
                 Date = DateTime.Today.AddDays(offset),
                 TaskType = TaskType.Normal,
                 Id = Guid.NewGuid(),
@@ -95,12 +141,22 @@ namespace TaskLog.WebClient.Services
 
         public List<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
         public List<JobTask> Tasks { get; set; } = new List<JobTask>();
-        public JobTask[] GetSampleJobTasks(DateTime taskTime)
+        private IEnumerable<JobTask> GetSampleDayTasks(DateTime taskTime)
         {
-            return Enumerable.Range(1, 5).Select(index => GetSampleJobTask(taskTime)).ToArray();
+            return Enumerable.Range(1, 5).Select(index => GetSampleJobTask(taskTime));
         }
 
-        private readonly Random _rng = new Random();
+        //TODO: Use business days only. Issue #4
+        private IEnumerable<JobTask> CreateSampleTasks()
+        {
+            var tasks = new List<JobTask>();
+            tasks.AddRange(GetSampleDayTasks(DateTime.Now));
+            tasks.AddRange(GetSampleDayTasks(DateTime.Now.AddDays(-1)));
+            tasks.AddRange(GetSampleDayTasks(DateTime.Now.AddDays(+2)));
+            return tasks;
+        }
+
+        private readonly Random _random = new Random();
 
         public JobTask GetSampleJobTask(DateTime taskTime)
         {
@@ -108,10 +164,36 @@ namespace TaskLog.WebClient.Services
             {
                 Id = Guid.NewGuid(),
                 Date = taskTime.Date,
-                Hours = (double)(_rng.Next(0, 6)) / 2,
-                ProjectJob = Jobs.ElementAt(_rng.Next() % 4),
-                TaskType = (TaskType)(_rng.Next() % 5),
+                Hours = (double)(_random.Next(0, 6)) / 2,
+                ProjectJob = Jobs.ElementAt(_random.Next() % 4),
+                TaskType = (TaskType)(_random.Next() % 5),
             };
+        }
+
+        public IEnumerable<ProjectJob> CreateSampleJobs()
+        {
+            return Enumerable.Range(1, 4).Select(index => CreateSampleJob()).ToArray();
+        }
+
+        private ProjectJob CreateSampleJob()
+        {
+            return new ProjectJob()
+            {
+                Code = $"Code{_random.Next(0, 127)}",
+                Id = Guid.NewGuid(),
+                DefaultColor = GetRandomColor(),
+                Description = "Short Description",
+                ProjectType = (ProjectType)(_random.Next() % 3),
+            }
+            ;
+        }
+
+        //TODO: Create a color palette. Issue #21;
+        private string GetRandomColor()
+        {
+            var names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
+            var randomColorName = names[_random.Next(names.Length)];
+            return randomColorName.ToString();
         }
     }
 }
