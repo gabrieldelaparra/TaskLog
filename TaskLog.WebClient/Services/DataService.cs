@@ -118,7 +118,6 @@ namespace TaskLog.WebClient.Services
             {
                 ProjectJob = Jobs.OrderBy(x => x.Id).FirstOrDefault(),
                 Hours = 0.5,
-                //TODO: Take business days into consideration. Issue #4
                 Date = AddBusinessDays(DateTime.Today, offset, 0),
                 TaskType = TaskType.Normal,
                 Id = Guid.NewGuid(),
@@ -192,9 +191,27 @@ namespace TaskLog.WebClient.Services
         //TODO: Create a color palette. Issue #21;
         private string GetRandomColor()
         {
-            var names = (KnownColor[])Enum.GetValues(typeof(KnownColor));
+            var names = (ColorPalette[])Enum.GetValues(typeof(ColorPalette));
             var randomColorName = names[_random.Next(names.Length)];
             return randomColorName.ToString();
+        }
+
+        public enum ColorPalette
+        {
+            LIGHTCORAL,
+            LIGHTSALMON,
+            PINK,
+            MOCCASIN,
+            PALEGOLDENROD,
+            KHAKI,
+            LAVENDER,
+            PALEGREEN,
+            LIGHTCYAN,
+            LIGHTSTEELBLUE,
+            POWDERBLUE,
+            LIGHTSKYBLUE,
+            BISQUE,
+            LIGHTGRAY,
         }
     }
 }
