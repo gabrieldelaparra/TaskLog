@@ -6,6 +6,6 @@
         Tools,
         Rework,
         Error,
-        Other,
+        Other
     }
 }

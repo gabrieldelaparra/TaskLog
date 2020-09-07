@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -13,13 +12,19 @@ namespace TaskLog.WebClient.Services
     {
         private const string JobFile = "jobs.json";
         private const string TaskFile = "tasks.json";
+        private readonly Random _random = new Random();
+        public List<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
+        public List<JobTask> Tasks { get; set; } = new List<JobTask>();
+
         public DateTime AddBusinessDays(DateTime dateTime, int offset, int extraDays)
         {
             var current = dateTime.AddDays(offset);
             if (current.DayOfWeek.Equals(DayOfWeek.Saturday) || current.DayOfWeek.Equals(DayOfWeek.Sunday))
             {
                 if (extraDays == 0)
+                {
                     extraDays++;
+                }
             }
 
 
@@ -30,11 +35,56 @@ namespace TaskLog.WebClient.Services
                 do
                 {
                     current = current.AddDays(sign);
-                }
-                while (current.DayOfWeek == DayOfWeek.Saturday ||
-                       current.DayOfWeek == DayOfWeek.Sunday);
+                } while (current.DayOfWeek == DayOfWeek.Saturday ||
+                         current.DayOfWeek == DayOfWeek.Sunday);
             }
+
             return current;
+        }
+
+        public void AddNewTask(int offset)
+        {
+            Tasks.Add(new JobTask
+            {
+                ProjectJob = Jobs.OrderBy(x => x.Id).FirstOrDefault(),
+                Hours = 0.5,
+                Date = AddBusinessDays(DateTime.Today, offset, 0),
+                TaskType = TaskType.Normal,
+                Id = Guid.NewGuid()
+            });
+            OnDataChanged?.Invoke();
+            SaveTasks(Tasks);
+        }
+
+        public IEnumerable<ProjectJob> CreateSampleJobs()
+        {
+            return Enumerable.Range(1, 4).Select(index => CreateSampleJob()).ToArray();
+        }
+
+        public void LoadJobs()
+        {
+            LoadJobs(JobFile);
+        }
+
+        public void LoadTasks()
+        {
+            LoadTasks(TaskFile);
+        }
+
+        public void MoveToNewDay(JobTask task, DateTime newTaskDate)
+        {
+            task.Date = newTaskDate.Date;
+            OnDataChanged?.Invoke();
+            SaveTasks(Tasks);
+        }
+
+        public event Action OnDataChanged;
+
+        public void RemoveTask(JobTask task)
+        {
+            Tasks.Remove(task);
+            OnDataChanged?.Invoke();
+            SaveTasks(Tasks);
         }
 
         public void SaveJobs(IEnumerable<ProjectJob> jobs)
@@ -43,9 +93,61 @@ namespace TaskLog.WebClient.Services
             File.WriteAllText(JobFile, jobsJson);
         }
 
-        public void LoadJobs()
+        public void SaveTasks(IEnumerable<JobTask> tasks)
         {
-            LoadJobs(JobFile);
+            var tasksJson = JsonSerializer.Serialize(tasks.ToArray());
+            File.WriteAllText(TaskFile, tasksJson);
+        }
+
+        public void SaveTasks()
+        {
+            SaveTasks(Tasks);
+        }
+
+        private ProjectJob CreateSampleJob()
+        {
+            return new ProjectJob
+            {
+                Code = $"Code_{_random.Next(127)}",
+                Id = Guid.NewGuid(),
+                DefaultColor = GetRandomColor(),
+                Description = "Short Description",
+                ProjectType = (ProjectType)_random.Next(Enum.GetValues(typeof(ProjectType)).Length)
+            }
+                ;
+        }
+
+        private IEnumerable<JobTask> CreateSampleTasks()
+        {
+            var tasks = new List<JobTask>();
+            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, 0)));
+            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, -1)));
+            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, +2)));
+            return tasks;
+        }
+
+        private string GetRandomColor()
+        {
+            var names = (ColorPalette[])Enum.GetValues(typeof(ColorPalette));
+            var randomColorName = names[_random.Next(names.Length)];
+            return randomColorName.ToString();
+        }
+
+        private IEnumerable<JobTask> GetSampleDayTasks(DateTime taskTime)
+        {
+            return Enumerable.Range(1, 5).Select(index => GetSampleJobTask(taskTime));
+        }
+
+        private JobTask GetSampleJobTask(DateTime taskTime)
+        {
+            return new JobTask
+            {
+                Id = Guid.NewGuid(),
+                Date = taskTime.Date,
+                Hours = (double)_random.Next(6) / 2,
+                ProjectJob = Jobs.ElementAt(_random.Next(4)),
+                TaskType = (TaskType)(_random.Next() % Enum.GetValues(typeof(TaskType)).Length)
+            };
         }
 
         private void LoadJobs(string filename)
@@ -61,7 +163,8 @@ namespace TaskLog.WebClient.Services
                 {
                     var now = DateTime.Now;
                     Console.WriteLine(ex);
-                    File.Copy(filename, $"{Path.GetFileNameWithoutExtension(filename)}_backup_{now.ToShortDateString()}_{now.ToShortTimeString()}.{Path.GetExtension(filename)}");
+                    File.Copy(filename,
+                        $"{Path.GetFileNameWithoutExtension(filename)}_backup_{now.ToShortDateString()}_{now.ToShortTimeString()}.{Path.GetExtension(filename)}");
                     Jobs = CreateSampleJobs().ToList();
                 }
             }
@@ -69,17 +172,6 @@ namespace TaskLog.WebClient.Services
             {
                 Jobs = CreateSampleJobs().ToList();
             }
-        }
-
-        public void SaveTasks(IEnumerable<JobTask> tasks)
-        {
-            var tasksJson = JsonSerializer.Serialize(tasks.ToArray());
-            File.WriteAllText(TaskFile, tasksJson);
-        }
-
-        public void LoadTasks()
-        {
-            LoadTasks(TaskFile);
         }
 
         private void LoadTasks(string filename)
@@ -95,7 +187,8 @@ namespace TaskLog.WebClient.Services
                 {
                     var now = DateTime.Now;
                     Console.WriteLine(ex);
-                    File.Copy(filename, $"{Path.GetFileNameWithoutExtension(filename)}_backup_{now.ToShortDateString()}_{now.ToShortTimeString()}.{Path.GetExtension(filename)}");
+                    File.Copy(filename,
+                        $"{Path.GetFileNameWithoutExtension(filename)}_backup_{now.ToShortDateString()}_{now.ToShortTimeString()}.{Path.GetExtension(filename)}");
                     Tasks = CreateSampleTasks().ToList();
                 }
             }
@@ -105,98 +198,7 @@ namespace TaskLog.WebClient.Services
             }
         }
 
-        public void SaveTasks()
-        {
-            SaveTasks(Tasks);
-        }
-
-        public event Action OnDataChanged;
-
-        public void AddNewTask(int offset)
-        {
-            Tasks.Add(new JobTask()
-            {
-                ProjectJob = Jobs.OrderBy(x => x.Id).FirstOrDefault(),
-                Hours = 0.5,
-                Date = AddBusinessDays(DateTime.Today, offset, 0),
-                TaskType = TaskType.Normal,
-                Id = Guid.NewGuid(),
-            });
-            OnDataChanged?.Invoke();
-            SaveTasks(Tasks);
-        }
-
-        public void MoveToNewDay(JobTask task, DateTime newTaskDate)
-        {
-            task.Date = newTaskDate.Date;
-            OnDataChanged?.Invoke();
-            SaveTasks(Tasks);
-        }
-
-        public void RemoveTask(JobTask task)
-        {
-            Tasks.Remove(task);
-            OnDataChanged?.Invoke();
-            SaveTasks(Tasks);
-        }
-
-        public List<ProjectJob> Jobs { get; set; } = new List<ProjectJob>();
-        public List<JobTask> Tasks { get; set; } = new List<JobTask>();
-        private IEnumerable<JobTask> GetSampleDayTasks(DateTime taskTime)
-        {
-            return Enumerable.Range(1, 5).Select(index => GetSampleJobTask(taskTime));
-        }
-
-        private IEnumerable<JobTask> CreateSampleTasks()
-        {
-            var tasks = new List<JobTask>();
-            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, 0)));
-            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, -1)));
-            tasks.AddRange(GetSampleDayTasks(AddBusinessDays(DateTime.Today, 0, +2)));
-            return tasks;
-        }
-
-        private readonly Random _random = new Random();
-
-        private JobTask GetSampleJobTask(DateTime taskTime)
-        {
-            return new JobTask()
-            {
-                Id = Guid.NewGuid(),
-                Date = taskTime.Date,
-                Hours = (double)(_random.Next(0, 6)) / 2,
-                ProjectJob = Jobs.ElementAt(_random.Next() % 4),
-                TaskType = (TaskType)(_random.Next() % 5),
-            };
-        }
-
-        public IEnumerable<ProjectJob> CreateSampleJobs()
-        {
-            return Enumerable.Range(1, 4).Select(index => CreateSampleJob()).ToArray();
-        }
-
-        private ProjectJob CreateSampleJob()
-        {
-            return new ProjectJob()
-            {
-                Code = $"Code{_random.Next(0, 127)}",
-                Id = Guid.NewGuid(),
-                DefaultColor = GetRandomColor(),
-                Description = "Short Description",
-                ProjectType = (ProjectType)(_random.Next() % 3),
-            }
-            ;
-        }
-
-        //TODO: Create a color palette. Issue #21;
-        private string GetRandomColor()
-        {
-            var names = (ColorPalette[])Enum.GetValues(typeof(ColorPalette));
-            var randomColorName = names[_random.Next(names.Length)];
-            return randomColorName.ToString();
-        }
-
-        public enum ColorPalette
+        private enum ColorPalette
         {
             LIGHTCORAL,
             LIGHTSALMON,
@@ -211,7 +213,7 @@ namespace TaskLog.WebClient.Services
             POWDERBLUE,
             LIGHTSKYBLUE,
             BISQUE,
-            LIGHTGRAY,
+            LIGHTGRAY
         }
     }
 }
