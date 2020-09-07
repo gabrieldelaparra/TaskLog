@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+TaskLog.WebClient/tasks.json
+TaskLog.WebClient/jobs.json
