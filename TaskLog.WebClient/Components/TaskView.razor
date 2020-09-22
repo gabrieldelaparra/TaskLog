@@ -19,7 +19,8 @@
         </div>
 
         <!-- Badge -->
-        <button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1 task-type-badge" @onclick="RollBadge">@JobTask.TaskType.ToString()</button>
+        <LargeTaskTypeBadge TaskType="@JobTask.TaskType" OnChangeAction="BadgeChanged" />
+        @*<button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1 task-type-badge" @onclick="RollBadge">@JobTask.TaskType.ToString()</button>*@
 
     </div>
 
@@ -65,24 +66,9 @@
         TaskDragStateHandler.SetSelectedTask(this);
     }
 
-    private string BadgeStyle => GetTaskTypeBadgeStyle(JobTask.TaskType);
-
-    //TODO: Refactor out
-    private string GetTaskTypeBadgeStyle(TaskType taskType) => taskType switch
+    private void BadgeChanged(TaskType taskType)
     {
-        TaskType.Error => "danger",
-        TaskType.Normal => "light",
-        TaskType.Other => "secondary",
-        TaskType.Rework => "warning",
-        TaskType.Tools => "info",
-        _ => "light",
-    };
-
-    //TODO: Refactor out
-    public void RollBadge()
-    {
-        var currentIndex = (int)JobTask.TaskType;
-        JobTask.TaskType = (TaskType)(++currentIndex % Enum.GetValues(typeof(TaskType)).Length);
+        JobTask.TaskType = taskType;
         UpdateJob();
     }
 }

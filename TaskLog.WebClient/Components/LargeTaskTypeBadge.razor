@@ -1,5 +1,25 @@
-﻿<h3>LargeTaskTypeBadge</h3>
+﻿<button type="button" class="badge badge-@GetTaskTypeBadgeStyle(TaskType) float-right mx-2 mt-1 task-type-badge" @onclick="RollBadge">@TaskType</button>
 
 @code {
+    [Parameter]
+    public TaskType TaskType { get; set; }
 
+    public void RollBadge()
+    {
+        var currentIndex = (int)TaskType;
+        TaskType = (TaskType)(++currentIndex % Enum.GetValues(typeof(TaskType)).Length);
+        OnChangeAction.InvokeAsync(TaskType);
+    }
+
+    private string GetTaskTypeBadgeStyle(TaskType taskType) => taskType switch
+    {
+        TaskType.Error => "danger",
+        TaskType.Normal => "light",
+        TaskType.Other => "secondary",
+        TaskType.Rework => "warning",
+        TaskType.Tools => "info",
+        _ => "light",
+    };
+
+    [Parameter] public EventCallback<TaskType> OnChangeAction { get; set; }
 }
