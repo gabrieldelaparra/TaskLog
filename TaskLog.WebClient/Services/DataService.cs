@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-
 using TaskLog.WebClient.Models;
 
 namespace TaskLog.WebClient.Services
@@ -20,13 +19,8 @@ namespace TaskLog.WebClient.Services
         {
             var current = dateTime.AddDays(offset);
             if (current.DayOfWeek.Equals(DayOfWeek.Saturday) || current.DayOfWeek.Equals(DayOfWeek.Sunday))
-            {
                 if (extraDays == 0)
-                {
                     extraDays++;
-                }
-            }
-
 
             var sign = Math.Sign(extraDays);
             var unsignedDays = Math.Abs(extraDays);
