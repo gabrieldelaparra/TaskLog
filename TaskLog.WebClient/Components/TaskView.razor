@@ -1,9 +1,7 @@
 ﻿@inject TaskDragStateHandler TaskDragStateHandler
 @inject DataService DataService
 
-<div class="border rounded m-2 px-1" style=" width: 16rem;
-        background: @JobTask.ProjectJob.DefaultColor;
-">
+<div class="border rounded m-2 px-1" style=" width: 16rem; background: @JobTask.ProjectJob.DefaultColor;">
 
     <!-- Drag, Clock/Hours, Badge -->
     <div class="d-inline-flex al-cnt">
@@ -21,9 +19,7 @@
         </div>
 
         <!-- Badge -->
-        <div>
-            <button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1 task-type-badge" @onclick="RollBadge">@JobTask.TaskType.ToString()</button>
-        </div>
+        <button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1 task-type-badge" @onclick="RollBadge">@JobTask.TaskType.ToString()</button>
 
     </div>
 
@@ -39,11 +35,6 @@
 
     //View Model
     [Parameter] public JobTask JobTask { get; set; }
-
-    private void HandleDragStart()
-    {
-        TaskDragStateHandler.SetSelectedTask(this);
-    }
 
     public double Hours
     {
@@ -69,31 +60,29 @@
         DataService.SaveTasks();
     }
 
-    //TODO: Refactor out
-    private string BadgeStyle
+    private void HandleDragStart()
     {
-        get
-        {
-            if (JobTask.TaskType == TaskType.Error)
-                return "danger";
-            if (JobTask.TaskType == TaskType.Normal)
-                return "light";
-            if (JobTask.TaskType == TaskType.Other)
-                return "secondary";
-            if (JobTask.TaskType == TaskType.Rework)
-                return "warning";
-            if (JobTask.TaskType == TaskType.Tools)
-                return "info";
-            return "light";
-        }
+        TaskDragStateHandler.SetSelectedTask(this);
     }
+
+    private string BadgeStyle => GetTaskTypeBadgeStyle(JobTask.TaskType);
+
+    //TODO: Refactor out
+    private string GetTaskTypeBadgeStyle(TaskType taskType) => taskType switch
+    {
+        TaskType.Error => "danger",
+        TaskType.Normal => "light",
+        TaskType.Other => "secondary",
+        TaskType.Rework => "warning",
+        TaskType.Tools => "info",
+        _ => "light",
+    };
 
     //TODO: Refactor out
     public void RollBadge()
     {
         var currentIndex = (int)JobTask.TaskType;
-        JobTask.TaskType = (TaskType)(++currentIndex % 5);
+        JobTask.TaskType = (TaskType)(++currentIndex % Enum.GetValues(typeof(TaskType)).Length);
         UpdateJob();
     }
-
 }
