@@ -10,6 +10,7 @@ namespace TaskLog.WebClient.Models
         public Guid Id { get; set; }
         public ProjectJob ProjectJob { get; set; }
         public TaskType TaskType { get; set; }
+
         public override string ToString()
         {
             return $"{ProjectJob.Code} @ {Date.ToShortDateString()}: {Hours} ({TaskType})";

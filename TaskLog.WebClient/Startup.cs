@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using TaskLog.WebClient.Services;
 
 namespace TaskLog.WebClient
@@ -21,7 +22,8 @@ namespace TaskLog.WebClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor(config => {
+            services.AddServerSideBlazor(config =>
+            {
                 config.DetailedErrors = true;
             });
             services.AddSingleton<DataService>();
