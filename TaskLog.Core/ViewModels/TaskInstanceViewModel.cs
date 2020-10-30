@@ -38,9 +38,9 @@ namespace TaskLog.Core.ViewModels
             TaskInstanceType = TaskInstanceType.Cycle();
         }
 
-        public Action<TaskInstanceViewModel> NotifyDateChanged { get; set; }
-        public Action<TaskInstanceViewModel> NotifyHoursChanged { get; set; }
-        public Action<TaskInstanceViewModel> NotifyTaskInstanceTypeChanged { get; set; }
+        public Action<TaskInstanceViewModel> OnNotifyDateChanged { get; set; }
+        public Action<TaskInstanceViewModel> OnNotifyHoursChanged { get; set; }
+        public Action<TaskInstanceViewModel> OnNotifyTaskInstanceTypeChanged { get; set; }
 
         public DateTime Date
         {
@@ -50,7 +50,7 @@ namespace TaskLog.Core.ViewModels
                 _date = value;
                 OnPropertyChanged(nameof(Date));
                 //SetProperty(ref _date, value);
-                NotifyDateChanged?.Invoke(this);
+                OnNotifyDateChanged?.Invoke(this);
             }
         }
 
@@ -62,7 +62,7 @@ namespace TaskLog.Core.ViewModels
                 _hours = value;
                 OnPropertyChanged(nameof(Hours));
                 //SetProperty(ref _hours, value);
-                NotifyHoursChanged?.Invoke(this);
+                OnNotifyHoursChanged?.Invoke(this);
             }
         }
 
@@ -85,7 +85,7 @@ namespace TaskLog.Core.ViewModels
                 _taskInstanceType = value;
                 OnPropertyChanged(nameof(TaskInstanceType));
                 //SetProperty(ref _taskInstanceType, value);
-                NotifyTaskInstanceTypeChanged?.Invoke(this);
+                OnNotifyTaskInstanceTypeChanged?.Invoke(this);
             }
         }
 

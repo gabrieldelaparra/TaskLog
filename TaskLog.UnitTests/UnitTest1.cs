@@ -13,7 +13,7 @@ namespace TaskLog.UnitTests
         public void TestActionNotifies()
         {
             var vm = new TaskInstanceViewModel();
-            vm.NotifyDateChanged = NotifyDateChanged;
+            vm.OnNotifyDateChanged = NotifyDateChanged;
             vm.Date = DateTime.Now.Date;
         }
 
