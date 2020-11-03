@@ -63,6 +63,25 @@ namespace TaskLog.Core.Services
                 UpdateOrAddTaskInstance(taskInstanceViewModel);
         }
 
+        public Project GetProjectById(Guid id) {
+            if (_projects.ContainsKey(id))
+                return _projects[id];
+            throw new Exception($"Project not found: {id}");
+        }
+
+        public Task GetTaskById(Guid id)
+        {
+            if (_tasks.ContainsKey(id))
+                return _tasks[id];
+            throw new Exception($"Task not found: {id}");
+        }
+
+        public Work GetWorkById(Guid id) {
+            if (_works.ContainsKey(id))
+                return _works[id];
+            throw new Exception($"Work not found: {id}");
+        }
+
         private void UpdateOrAddTaskInstance(WorkViewModel taskInstanceViewModel)
         {
             var model = taskInstanceViewModel.WriteToModel();
