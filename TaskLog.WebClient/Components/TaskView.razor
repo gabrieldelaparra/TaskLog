@@ -5,6 +5,7 @@
 
     <!-- Drag, Clock/Hours, Badge -->
     <div class="d-inline-flex al-cnt">
+
         <!-- Drag -->
         <span class="oi oi-grid-three-up draggable float-left m-2" draggable="true" @ondragstart="@HandleDragStart"></span>
 
@@ -20,14 +21,30 @@
 
         <!-- Badge -->
         <LargeTaskTypeBadge TaskType="@JobTask.TaskType" OnChangeAction="BadgeChanged" />
-        @*<button type="button" class="badge badge-@BadgeStyle float-right mx-2 mt-1 task-type-badge" @onclick="RollBadge">@JobTask.TaskType.ToString()</button>*@
 
     </div>
+
+    <!-- Description -->
+    <small>
+        <p class="m-0">
+            Notes:
+            <button class="btn btn-sm" style="border-radius: 50%; font-size: 8px; outline: none;" @onclick="(()=>showNotes = !showNotes)">
+                <i class="@(showNotes ? "oi oi-chevron-bottom" : "oi oi-chevron-top")"></i>
+            </button>
+        </p>
+    </small>
+    @if(showNotes){
+        <div>
+            <textarea rows="1" style="width: 100%"></textarea>
+        </div>
+    }
 
     <!-- Task Element -->
     <div class="text-truncate">
         <small>
-            @JobTask.ProjectJob.ToString()
+            <strong>
+                @JobTask.ProjectJob.ToString()
+            </strong>
         </small>
     </div>
 </div>
@@ -36,6 +53,9 @@
 
     //View Model
     [Parameter] public JobTask JobTask { get; set; }
+    [Parameter] public Action OnHoursChanged { get; set; }
+
+    private bool showNotes = false;
 
     public double Hours
     {
@@ -43,17 +63,10 @@
         set
         {
             JobTask.Hours = value;
-            OnHoursChanged?.Invoke();
-            DataService.SaveTasks();
+            OnHoursChanged?.Invoke(); // To update day count
+            DataService.SaveTasks(); // Save Data
         }
     }
-
-    [Parameter] public Action OnHoursChanged { get; set; }
-
-    //I need this for 2 reasons:
-    //1. To call if from outside (sideNav after updating the job)
-    //2. To tell the parent to save; (this could be done by Cascading);
-    //[Parameter] public Action OnDataChanged { get; set; }
 
     public void UpdateJob()
     {
