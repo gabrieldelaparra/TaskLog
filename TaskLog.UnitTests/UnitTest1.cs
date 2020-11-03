@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TaskLog.Core;
 using TaskLog.Core.Models;
+using TaskLog.Core.Utilities;
 using TaskLog.Core.ViewModels;
 using Xunit;
 
@@ -17,7 +18,7 @@ namespace TaskLog.UnitTests
             vm.Date = DateTime.Now.Date;
         }
 
-        private void NotifyDateChanged(TaskInstanceViewModel obj) {
+        private void NotifyDateChanged(TaskInstanceViewModel obj, DateTime arg2, DateTime arg3) {
             Console.WriteLine($"Date changed: {obj.Date}");
         }
 

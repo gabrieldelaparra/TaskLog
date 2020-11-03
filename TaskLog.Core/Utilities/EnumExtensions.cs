@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TaskLog.Core
+namespace TaskLog.Core.Utilities
 {
     public static class EnumExtensions
     {

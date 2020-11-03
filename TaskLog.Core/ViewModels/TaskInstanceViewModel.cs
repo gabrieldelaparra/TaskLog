@@ -1,13 +1,13 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using TaskLog.Core.Annotations;
+using MvvmCross.ViewModels;
 using TaskLog.Core.Models;
+using TaskLog.Core.Utilities;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class TaskInstanceViewModel : INotifyPropertyChanged
+    public class TaskInstanceViewModel : MvxViewModel
     {
+        public Guid Id { get; set; }
         private DateTime _date;
         private double _hours;
         private string _details;
@@ -38,19 +38,20 @@ namespace TaskLog.Core.ViewModels
             TaskInstanceType = TaskInstanceType.Cycle();
         }
 
-        public Action<TaskInstanceViewModel> OnNotifyDateChanged { get; set; }
+        public Action<TaskInstanceViewModel, DateTime, DateTime> OnNotifyDateChanged { get; set; }
         public Action<TaskInstanceViewModel> OnNotifyHoursChanged { get; set; }
         public Action<TaskInstanceViewModel> OnNotifyTaskInstanceTypeChanged { get; set; }
+        public Action<TaskInstanceViewModel> OnNotifyDetailsProjectChanged { get; set; }
 
         public DateTime Date
         {
             get => _date;
-            set
-            {
+            set {
+                var oldDate = _date;
+                var newDate = value;
                 _date = value;
-                OnPropertyChanged(nameof(Date));
-                //SetProperty(ref _date, value);
-                OnNotifyDateChanged?.Invoke(this);
+                SetProperty(ref _date, value);
+                OnNotifyDateChanged?.Invoke(this, oldDate, newDate);
             }
         }
 
@@ -60,8 +61,7 @@ namespace TaskLog.Core.ViewModels
             set
             {
                 _hours = value;
-                OnPropertyChanged(nameof(Hours));
-                //SetProperty(ref _hours, value);
+                SetProperty(ref _hours, value);
                 OnNotifyHoursChanged?.Invoke(this);
             }
         }
@@ -72,8 +72,8 @@ namespace TaskLog.Core.ViewModels
             set
             {
                 _details = value;
-                //SetProperty(ref _details, value);
-                OnPropertyChanged(nameof(Details));
+                SetProperty(ref _details, value);
+                OnNotifyDetailsProjectChanged?.Invoke(this);
             }
         }
 
@@ -83,17 +83,10 @@ namespace TaskLog.Core.ViewModels
             set
             {
                 _taskInstanceType = value;
-                OnPropertyChanged(nameof(TaskInstanceType));
-                //SetProperty(ref _taskInstanceType, value);
+                SetProperty(ref _taskInstanceType, value);
                 OnNotifyTaskInstanceTypeChanged?.Invoke(this);
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+       
     }
 }
