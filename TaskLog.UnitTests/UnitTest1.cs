@@ -11,14 +11,19 @@ namespace TaskLog.UnitTests
     public class UnitTest1
     {
         [Fact]
+        public void TestTaskInstance() {
+
+        }
+
+        [Fact]
         public void TestActionNotifies()
         {
-            var vm = new TaskInstanceViewModel();
+            var vm = new WorkViewModel();
             vm.OnNotifyDateChanged = NotifyDateChanged;
             vm.Date = DateTime.Now.Date;
         }
 
-        private void NotifyDateChanged(TaskInstanceViewModel obj, DateTime arg2, DateTime arg3) {
+        private void NotifyDateChanged(WorkViewModel obj, DateTime arg2, DateTime arg3) {
             Console.WriteLine($"Date changed: {obj.Date}");
         }
 
@@ -26,12 +31,12 @@ namespace TaskLog.UnitTests
         public void TestCycleEnumFirstToSecond()
         {
 
-            var length = Enum.GetValues(typeof(TaskInstanceType)).Length;
+            var length = Enum.GetValues(typeof(WorkType)).Length;
             if (length < 2) 
                 Assert.False(true);
 
-            const TaskInstanceType typeFirst = (TaskInstanceType)0;
-            const TaskInstanceType typeSecond = (TaskInstanceType)1;
+            const WorkType typeFirst = (WorkType)0;
+            const WorkType typeSecond = (WorkType)1;
             var actual = typeFirst.Cycle();
             Assert.Equal(typeSecond, actual);
         }
@@ -39,12 +44,12 @@ namespace TaskLog.UnitTests
         [Fact]
         public void TestCycleEnumLastToFirst()
         {
-            var length = Enum.GetValues(typeof(TaskInstanceType)).Length;
+            var length = Enum.GetValues(typeof(WorkType)).Length;
             if (length < 2)
                 Assert.False(true);
 
-            var typeLast = (TaskInstanceType)length;
-            const TaskInstanceType typeFirst = (TaskInstanceType)0;
+            var typeLast = (WorkType)length;
+            const WorkType typeFirst = (WorkType)0;
             var actual = typeLast.Cycle();
             Assert.Equal(typeFirst, actual);
         }

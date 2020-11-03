@@ -5,43 +5,47 @@ using TaskLog.Core.Utilities;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class TaskInstanceViewModel : MvxViewModel
+    public class WorkViewModel : MvxViewModel
     {
         public Guid Id { get; set; }
         private DateTime _date;
         private double _hours;
         private string _details;
-        private TaskInstanceType _taskInstanceType = TaskInstanceType.Normal;
-        private TaskInstance TaskInstance { get; set; }
+        private WorkType _taskInstanceType = WorkType.Normal;
+        private Work Work { get; set; }
 
-        public TaskInstanceViewModel() { }
+        public WorkViewModel() { }
 
-        public void ReadFromModel(TaskInstance taskInstance)
-        {
-            TaskInstance = taskInstance;
-            Date = TaskInstance.Date;
-            Hours = TaskInstance.Hours;
-            Details = TaskInstance.Details;
-            TaskInstanceType = TaskInstance.TaskInstanceType;
+        public WorkViewModel(Work work) {
+            ReadFromModel(work);
         }
 
-        public TaskInstance WriteToModel()
+        public void ReadFromModel(Work work)
         {
-            TaskInstance.Hours = Hours;
-            TaskInstance.Date = Date;
-            TaskInstance.Details = Details;
-            TaskInstance.TaskInstanceType = TaskInstanceType;
-            return TaskInstance;
+            Work = work;
+            Date = Work.Date;
+            Hours = Work.Hours;
+            Details = Work.Details;
+            TaskInstanceType = Work.TaskInstanceType;
+        }
+
+        public Work WriteToModel()
+        {
+            Work.Hours = Hours;
+            Work.Date = Date;
+            Work.Details = Details;
+            Work.TaskInstanceType = TaskInstanceType;
+            return Work;
         }
 
         public void CycleTaskInstanceType() {
             TaskInstanceType = TaskInstanceType.Cycle();
         }
 
-        public Action<TaskInstanceViewModel, DateTime, DateTime> OnNotifyDateChanged { get; set; }
-        public Action<TaskInstanceViewModel> OnNotifyHoursChanged { get; set; }
-        public Action<TaskInstanceViewModel> OnNotifyTaskInstanceTypeChanged { get; set; }
-        public Action<TaskInstanceViewModel> OnNotifyDetailsProjectChanged { get; set; }
+        public Action<WorkViewModel, DateTime, DateTime> OnNotifyDateChanged { get; set; }
+        public Action<WorkViewModel> OnNotifyHoursChanged { get; set; }
+        public Action<WorkViewModel> OnNotifyTaskInstanceTypeChanged { get; set; }
+        public Action<WorkViewModel> OnNotifyDetailsProjectChanged { get; set; }
 
         public DateTime Date
         {
@@ -77,7 +81,7 @@ namespace TaskLog.Core.ViewModels
             }
         }
 
-        public TaskInstanceType TaskInstanceType
+        public WorkType TaskInstanceType
         {
             get => _taskInstanceType;
             set

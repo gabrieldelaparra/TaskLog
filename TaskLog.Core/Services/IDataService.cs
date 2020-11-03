@@ -7,9 +7,9 @@ namespace TaskLog.Core.Services
     public interface IDataService
     {
         void LoadData();
-        IEnumerable<TaskInstanceViewModel> LoadWeekTaskInstances(DateTime date);
-        IEnumerable<TaskInstanceViewModel> LoadMonthTaskInstances(DateTime date);
-        void SaveTaskInstances(IEnumerable<TaskInstanceViewModel> taskInstanceViewModels);
-        void UpdateTaskInstance(TaskInstanceViewModel taskInstanceViewModel);
+        IEnumerable<WorkViewModel> LoadWeekTaskInstances(DateTime date);
+        IEnumerable<WorkViewModel> LoadMonthTaskInstances(DateTime date);
+        void SaveTaskInstances(IEnumerable<WorkViewModel> taskInstanceViewModels);
+        //void UpdateOrAddTaskInstance(TaskInstanceViewModel taskInstanceViewModel);
     }
 }

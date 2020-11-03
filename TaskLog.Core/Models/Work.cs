@@ -2,7 +2,7 @@
 
 namespace TaskLog.Core.Models
 {
-    public class TaskInstance
+    public class Work
     {
         public Guid Id { get; set; }
         public Guid ProjectId { get; set; }
@@ -10,6 +10,6 @@ namespace TaskLog.Core.Models
         public DateTime Date { get; set; }
         public double Hours { get; set; }
         public string Details { get; set; }
-        public TaskInstanceType TaskInstanceType { get; set; } = TaskInstanceType.Normal;
+        public WorkType TaskInstanceType { get; set; } = WorkType.Normal;
     }
 }

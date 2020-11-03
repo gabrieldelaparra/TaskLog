@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
 using MvvmCross.ViewModels;
-
 using TaskLog.Core.Services;
 using TaskLog.Core.Utilities;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class WeekNavigationViewModel : MvxViewModel
+    public class WorkWeekNavigationViewModel : MvxViewModel
     {
         private DateTime _navigationDate = DateTime.Today;
 
         public string NavigationWeek =>
             $"Week: {_navigationDate.StartOfWeek().ToShortDateString()} to {_navigationDate.StartOfWeek().AddDays(5).ToShortDateString()}";
-        public WeekCollectionViewModel WeekCollectionViewModel { get; private set; } = new WeekCollectionViewModel();
-        private IEnumerable<TaskInstanceViewModel> _taskInstances;
+        public WorkWeekViewModel WeekCollectionViewModel { get; } = new WorkWeekViewModel();
+        private IEnumerable<WorkViewModel> _taskInstances;
         private readonly IDataService _dataService;
-        public WeekNavigationViewModel(IDataService dataService)
+        public WorkWeekNavigationViewModel(IDataService dataService)
         {
             _dataService = dataService;
         }

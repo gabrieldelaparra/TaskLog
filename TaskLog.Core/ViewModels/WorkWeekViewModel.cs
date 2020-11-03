@@ -6,12 +6,12 @@ using MvvmCross.ViewModels;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class WeekCollectionViewModel: MvxViewModel
+    public class WorkWeekViewModel: MvxViewModel
     {
-        private readonly IList<TaskInstanceViewModel> _taskInstances = new List<TaskInstanceViewModel>();
-        public ObservableCollection<DayCollectionViewModel> Days { get; private set; } = new ObservableCollection<DayCollectionViewModel>();
+        private readonly IList<WorkViewModel> _taskInstances = new List<WorkViewModel>();
+        public ObservableCollection<WorkDayViewModel> Days { get; private set; } = new ObservableCollection<WorkDayViewModel>();
 
-        public void UpdateTaskInstances(IEnumerable<TaskInstanceViewModel> taskInstances)
+        public void UpdateTaskInstances(IEnumerable<WorkViewModel> taskInstances)
         {
             //Clear the collection
             Days.Clear();
@@ -29,7 +29,7 @@ namespace TaskLog.Core.ViewModels
             var groupedByDay = taskInstances.GroupBy(x => x.Date.Date);
             foreach (var dayGroup in groupedByDay)
             {
-                var dayCollectionViewModel = new DayCollectionViewModel();
+                var dayCollectionViewModel = new WorkDayViewModel();
                 dayCollectionViewModel.UpdateTaskInstances(dayGroup.Key, dayGroup);
                 Days.Add(dayCollectionViewModel);
             }
@@ -39,7 +39,7 @@ namespace TaskLog.Core.ViewModels
             RaisePropertyChanged(() => IsValidSumHours);
         }
 
-        private void OnNotifyDateChanged(TaskInstanceViewModel task, DateTime oldDate, DateTime newDate)
+        private void OnNotifyDateChanged(WorkViewModel task, DateTime oldDate, DateTime newDate)
         {
             //Filter and update oldDate and newDate Days (if available);
             var affectedDays = Days.Where(x => x.Date.Equals(oldDate) || x.Date.Equals(newDate));
@@ -49,7 +49,7 @@ namespace TaskLog.Core.ViewModels
             }
         }
 
-        private void HandleNotifyHoursChanged(TaskInstanceViewModel obj)
+        private void HandleNotifyHoursChanged(WorkViewModel obj)
         {
             RaisePropertyChanged(() => SumHours);
             RaisePropertyChanged(() => IsValidSumHours);

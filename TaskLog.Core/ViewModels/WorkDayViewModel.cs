@@ -7,11 +7,11 @@ using MvvmCross.ViewModels;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class DayCollectionViewModel : MvxViewModel
+    public class WorkDayViewModel : MvxViewModel
     {
         private DateTime _date;
 
-        public ObservableCollection<TaskInstanceViewModel> TaskInstances { get; private set; } = new ObservableCollection<TaskInstanceViewModel>();
+        public ObservableCollection<WorkViewModel> TaskInstances { get; private set; } = new ObservableCollection<WorkViewModel>();
         public DateTime Date
         {
             get => _date;
@@ -22,7 +22,7 @@ namespace TaskLog.Core.ViewModels
             }
         }
 
-        public void UpdateTaskInstances(DateTime date, IEnumerable<TaskInstanceViewModel> taskInstances)
+        public void UpdateTaskInstances(DateTime date, IEnumerable<WorkViewModel> taskInstances)
         {
             Date = date;
 
@@ -37,7 +37,7 @@ namespace TaskLog.Core.ViewModels
             RaisePropertyChanged(() => IsValidSumHours);
         }
 
-        private void HandleNotifyHoursChanged(TaskInstanceViewModel task)
+        private void HandleNotifyHoursChanged(WorkViewModel task)
         {
             RaisePropertyChanged(() => SumHours);
             RaisePropertyChanged(() => IsValidSumHours);

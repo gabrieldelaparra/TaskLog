@@ -1,6 +1,6 @@
 ﻿namespace TaskLog.Core.Models
 {
-    public enum TaskInstanceType
+    public enum WorkType
     {
         Normal,
         Tools,

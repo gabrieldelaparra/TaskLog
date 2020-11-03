@@ -4,11 +4,6 @@ using System.Linq;
 
 namespace TaskLog.Core.Models
 {
-    public enum ProjectType
-    {
-        InternalProject,
-        CustomerProject,
-    }
     public class Project
     {
         public string Name { get; set; }
@@ -16,8 +11,8 @@ namespace TaskLog.Core.Models
         public string Code { get; set; }
         public Guid Id { get; set; }
         public ProjectType ProjectType { get; set; } = ProjectType.CustomerProject;
-        public IList<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
-        public IEnumerable<TaskInstance> TaskInstances => Tasks.SelectMany(x => x.TaskInstances);
+        public IList<Task> Tasks { get; set; } = new List<Task>();
+        public IEnumerable<Work> TaskInstances => Tasks.SelectMany(x => x.TaskInstances);
         public override string ToString() => $"({Code}) {Name}: {Description}";
     }
 }

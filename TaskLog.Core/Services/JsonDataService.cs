@@ -14,7 +14,7 @@ namespace TaskLog.Core.Services
     public class JsonDataService : IDataService
     {
         private readonly IMapper _mapper;
-        private List<TaskInstance> _taskInstances;
+        private Dictionary<Guid, Work> _taskInstances;
         private readonly IFileConfiguration _fileConfiguration;
         public JsonDataService(IFileConfiguration fileConfiguration)
         {
@@ -25,61 +25,44 @@ namespace TaskLog.Core.Services
 
         readonly MapperConfiguration _config = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<TaskInstance, TaskInstanceViewModel>();
-            cfg.CreateMap<TaskInstanceViewModel, TaskInstance>();
+            cfg.CreateMap<Work, WorkViewModel>();
+            cfg.CreateMap<WorkViewModel, Work>();
         });
 
         public void LoadData()
         {
-            _taskInstances = Wororo.Utilities.JsonSerialization.DeserializeJson<List<TaskInstance>>(_fileConfiguration.Filename);
+            _taskInstances = Wororo.Utilities.JsonSerialization.DeserializeJson<Dictionary<Guid, Work>>(_fileConfiguration.TasksFilename);
         }
 
-        public IEnumerable<TaskInstanceViewModel> LoadWeekTaskInstances(DateTime date)
+        public IEnumerable<WorkViewModel> LoadWeekTaskInstances(DateTime date)
         {
             var calendarWeek = date.GetCalendarWeek();
-            var taskInstances = _taskInstances.Where(x => x.Date.GetCalendarWeek().Equals(calendarWeek));
-
-            var viewModels = new List<TaskInstanceViewModel>();
-            foreach (var taskInstance in taskInstances)
-            {
-                viewModels.Add(_mapper.Map<TaskInstance, TaskInstanceViewModel>(taskInstance));
-            }
-
-            return viewModels;
+            var taskInstances = _taskInstances.Where(x => x.Value.Date.GetCalendarWeek().Equals(calendarWeek));
+            return taskInstances.Select(x => new WorkViewModel(x.Value)).ToList();
         }
 
-        public IEnumerable<TaskInstanceViewModel> LoadMonthTaskInstances(DateTime date)
+        public IEnumerable<WorkViewModel> LoadMonthTaskInstances(DateTime date)
         {
-            var taskInstances = _taskInstances.Where(x => x.Date.Month.Equals(date.Month));
-
-            var viewModels = new List<TaskInstanceViewModel>();
-            foreach (var taskInstance in taskInstances)
-            {
-                viewModels.Add(_mapper.Map<TaskInstance, TaskInstanceViewModel>(taskInstance));
-            }
-
-            return viewModels;
+            var taskInstances = _taskInstances.Select(x => x.Value).Where(x => x.Date.Month.Equals(date.Month));
+            return taskInstances.Select(taskInstance => new WorkViewModel(taskInstance)).ToList();
         }
 
-        public void SaveTaskInstances(IEnumerable<TaskInstanceViewModel> taskInstanceViewModels)
+        public void SaveTaskInstances(IEnumerable<WorkViewModel> taskInstanceViewModels)
         {
-            foreach (var taskInstanceViewModel in taskInstanceViewModels) {
-                if (_taskInstances.Any(x => x.Id.Equals(taskInstanceViewModel.Id))) {
-                    var taskInstance = _taskInstances.First(x => x.Id.Equals(taskInstanceViewModel.Id));
-                    taskInstance =_mapper.Map<TaskInstanceViewModel, TaskInstance>(taskInstanceViewModel);
-                }
-                else {
-                    var taskInstance =_mapper.Map<TaskInstanceViewModel, TaskInstance>(taskInstanceViewModel);
-                    _taskInstances.Add(taskInstance);
-                }
-            }
+            foreach (var taskInstanceViewModel in taskInstanceViewModels)
+                UpdateOrAddTaskInstance(taskInstanceViewModel);
 
-            Wororo.Utilities.JsonSerialization.SerializeJson(_taskInstances, _fileConfiguration.Filename);
+            Wororo.Utilities.JsonSerialization.SerializeJson(_taskInstances, _fileConfiguration.TasksFilename);
         }
 
-        public void UpdateTaskInstance(TaskInstanceViewModel taskInstanceViewModel)
+        private void UpdateOrAddTaskInstance(WorkViewModel taskInstanceViewModel)
         {
-            throw new NotImplementedException();
+            var model = taskInstanceViewModel.WriteToModel();
+
+            if (_taskInstances.ContainsKey(model.Id))
+                _taskInstances[model.Id] = model;
+            else
+                _taskInstances.Add(model.Id, model);
         }
     }
 }
