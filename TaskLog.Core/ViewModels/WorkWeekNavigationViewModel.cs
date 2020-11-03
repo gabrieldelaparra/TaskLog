@@ -26,7 +26,7 @@ namespace TaskLog.Core.ViewModels
 
         public void LoadData()
         {
-            _taskInstances = _dataService.LoadWeekTaskInstances(_navigationDate);
+            _taskInstances = _dataService.LoadWeekWorks(_navigationDate);
             WeekCollectionViewModel.UpdateTaskInstances(_taskInstances);
             RaisePropertyChanged(() => NavigationWeek);
         }

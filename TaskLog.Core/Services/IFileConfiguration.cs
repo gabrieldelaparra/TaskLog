@@ -2,8 +2,8 @@
 {
     public interface IFileConfiguration
     {
-        string TasksFilename { get; set; }
+        string WorksFilename { get; set; }
         string ProjectsFilename { get; set; }
-        string ProjectTasksFilename { get; set; }
+        string TasksFilename { get; set; }
     }
 }

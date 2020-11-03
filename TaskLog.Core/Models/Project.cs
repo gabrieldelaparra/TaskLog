@@ -12,7 +12,7 @@ namespace TaskLog.Core.Models
         public Guid Id { get; set; }
         public ProjectType ProjectType { get; set; } = ProjectType.CustomerProject;
         public IList<Task> Tasks { get; set; } = new List<Task>();
-        public IEnumerable<Work> TaskInstances => Tasks.SelectMany(x => x.TaskInstances);
+        public IEnumerable<Work> Works => Tasks.SelectMany(x => x.TaskInstances);
         public override string ToString() => $"({Code}) {Name}: {Description}";
     }
 }

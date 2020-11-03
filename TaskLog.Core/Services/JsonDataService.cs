@@ -1,68 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-
-using AutoMapper;
-
 using TaskLog.Core.Models;
 using TaskLog.Core.Utilities;
 using TaskLog.Core.ViewModels;
 
 namespace TaskLog.Core.Services
 {
+
     public class JsonDataService : IDataService
     {
-        private readonly IMapper _mapper;
-        private Dictionary<Guid, Work> _taskInstances;
+        private Dictionary<Guid, Work> _works;
+        private Dictionary<Guid, Project> _projects;
+        private Dictionary<Guid, Task> _tasks;
         private readonly IFileConfiguration _fileConfiguration;
         public JsonDataService(IFileConfiguration fileConfiguration)
         {
             _fileConfiguration = fileConfiguration;
-            _mapper = _config.CreateMapper();
             LoadData();
         }
 
-        readonly MapperConfiguration _config = new MapperConfiguration(cfg =>
-        {
-            cfg.CreateMap<Work, WorkViewModel>();
-            cfg.CreateMap<WorkViewModel, Work>();
-        });
-
         public void LoadData()
         {
-            _taskInstances = Wororo.Utilities.JsonSerialization.DeserializeJson<Dictionary<Guid, Work>>(_fileConfiguration.TasksFilename);
+            var projectData = Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Project>>(_fileConfiguration.ProjectsFilename);
+            _projects = projectData.ToDictionary(x => x.Id, x => x);
+
+            var taskData = Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Task>>(_fileConfiguration.TasksFilename);
+            _tasks = taskData.ToDictionary(x => x.Id, x => x);
+
+            var workData = Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Work>>(_fileConfiguration.WorksFilename);
+            _works = workData.ToDictionary(x => x.Id, x => x);
         }
 
-        public IEnumerable<WorkViewModel> LoadWeekTaskInstances(DateTime date)
+        public void SaveData()
+        {
+            var projectData = _projects.Select(x => x.Value);
+            Wororo.Utilities.JsonSerialization.SerializeJson(projectData, _fileConfiguration.ProjectsFilename);
+
+            var taskData = _tasks.Select(x => x.Value);
+            Wororo.Utilities.JsonSerialization.SerializeJson(taskData, _fileConfiguration.TasksFilename);
+
+            var workData = _works.Select(x => x.Value);
+            Wororo.Utilities.JsonSerialization.SerializeJson(workData, _fileConfiguration.WorksFilename);
+        }
+
+        public IEnumerable<WorkViewModel> LoadWeekWorks(DateTime date)
         {
             var calendarWeek = date.GetCalendarWeek();
-            var taskInstances = _taskInstances.Where(x => x.Value.Date.GetCalendarWeek().Equals(calendarWeek));
+            var taskInstances = _works.Where(x => x.Value.Date.GetCalendarWeek().Equals(calendarWeek));
             return taskInstances.Select(x => new WorkViewModel(x.Value)).ToList();
         }
 
-        public IEnumerable<WorkViewModel> LoadMonthTaskInstances(DateTime date)
+        public IEnumerable<WorkViewModel> LoadMonthWorks(DateTime date)
         {
-            var taskInstances = _taskInstances.Select(x => x.Value).Where(x => x.Date.Month.Equals(date.Month));
+            var taskInstances = _works.Select(x => x.Value).Where(x => x.Date.Month.Equals(date.Month));
             return taskInstances.Select(taskInstance => new WorkViewModel(taskInstance)).ToList();
         }
 
-        public void SaveTaskInstances(IEnumerable<WorkViewModel> taskInstanceViewModels)
+        public void SaveWorks(IEnumerable<WorkViewModel> workViewModels)
         {
-            foreach (var taskInstanceViewModel in taskInstanceViewModels)
+            foreach (var taskInstanceViewModel in workViewModels)
                 UpdateOrAddTaskInstance(taskInstanceViewModel);
-
-            Wororo.Utilities.JsonSerialization.SerializeJson(_taskInstances, _fileConfiguration.TasksFilename);
         }
 
         private void UpdateOrAddTaskInstance(WorkViewModel taskInstanceViewModel)
         {
             var model = taskInstanceViewModel.WriteToModel();
 
-            if (_taskInstances.ContainsKey(model.Id))
-                _taskInstances[model.Id] = model;
+            if (_works.ContainsKey(model.Id))
+                _works[model.Id] = model;
             else
-                _taskInstances.Add(model.Id, model);
+                _works.Add(model.Id, model);
         }
     }
 }

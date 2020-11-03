@@ -26,7 +26,7 @@ namespace TaskLog.Core.ViewModels
             Date = Work.Date;
             Hours = Work.Hours;
             Details = Work.Details;
-            TaskInstanceType = Work.TaskInstanceType;
+            TaskInstanceType = Work.WorkType;
         }
 
         public Work WriteToModel()
@@ -34,7 +34,7 @@ namespace TaskLog.Core.ViewModels
             Work.Hours = Hours;
             Work.Date = Date;
             Work.Details = Details;
-            Work.TaskInstanceType = TaskInstanceType;
+            Work.WorkType = TaskInstanceType;
             return Work;
         }
 
