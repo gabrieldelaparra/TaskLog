@@ -7,7 +7,7 @@ using MvvmCross.ViewModels;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class WorkDayViewModel : MvxViewModel
+    public class WorkDayViewModel : MvxViewModel, IWorkCollection
     {
         private DateTime _date;
 
@@ -22,10 +22,8 @@ namespace TaskLog.Core.ViewModels
             }
         }
 
-        public void UpdateTaskInstances(DateTime date, IEnumerable<WorkViewModel> taskInstances)
+        public void UpdateTaskInstances(IEnumerable<WorkViewModel> taskInstances)
         {
-            Date = date;
-
             TaskInstances.Clear();
             foreach (var taskInstanceViewModel in taskInstances)
             {

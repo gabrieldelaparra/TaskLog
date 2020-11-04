@@ -7,8 +7,7 @@ using TaskLog.Core.ViewModels;
 
 namespace TaskLog.Core.Services
 {
-
-    public class JsonDataService : IDataService
+    public class JsonDataService : IDataService, IDataLoaderService
     {
         private Dictionary<Guid, Work> _works;
         private Dictionary<Guid, Project> _projects;
@@ -44,23 +43,24 @@ namespace TaskLog.Core.Services
             Wororo.Utilities.JsonSerialization.SerializeJson(workData, _fileConfiguration.WorksFilename);
         }
 
-        public IEnumerable<WorkViewModel> LoadWeekWorks(DateTime date)
+      //public Action OnLoadWeekWorks { get; set; }; 
+      public IEnumerable<WorkViewModel> GetWeekWorks(DateTime date)
         {
             var calendarWeek = date.GetCalendarWeek();
             var taskInstances = _works.Where(x => x.Value.Date.GetCalendarWeek().Equals(calendarWeek));
             return taskInstances.Select(x => new WorkViewModel(x.Value)).ToList();
         }
 
-        public IEnumerable<WorkViewModel> LoadMonthWorks(DateTime date)
+        public IEnumerable<WorkViewModel> GetMonthWorks(DateTime date)
         {
             var taskInstances = _works.Select(x => x.Value).Where(x => x.Date.Month.Equals(date.Month));
             return taskInstances.Select(taskInstance => new WorkViewModel(taskInstance)).ToList();
         }
 
-        public void SaveWorks(IEnumerable<WorkViewModel> workViewModels)
+        public void SetWorks(IEnumerable<WorkViewModel> workViewModels)
         {
             foreach (var taskInstanceViewModel in workViewModels)
-                UpdateOrAddTaskInstance(taskInstanceViewModel);
+                UpdateOrAddWork(taskInstanceViewModel);
         }
 
         public Project GetProjectById(Guid id) {
@@ -82,7 +82,7 @@ namespace TaskLog.Core.Services
             throw new Exception($"Work not found: {id}");
         }
 
-        private void UpdateOrAddTaskInstance(WorkViewModel taskInstanceViewModel)
+        private void UpdateOrAddWork(WorkViewModel taskInstanceViewModel)
         {
             var model = taskInstanceViewModel.WriteToModel();
 
