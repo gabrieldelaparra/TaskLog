@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace TaskLog.Core.Models
 {
     public class Task
     {
         public Task() {
-            Id = new Guid();
+            Id = Guid.NewGuid();
         }
         public Guid Id { get; }
         public Guid ProjectId { get; set; }

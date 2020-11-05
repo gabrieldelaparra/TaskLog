@@ -5,7 +5,7 @@ namespace TaskLog.Core.Models
     public class Work
     {
         public Work() {
-            Id = new Guid();
+            Id = Guid.NewGuid();
         }
         public Guid Id { get; }
         public Guid ProjectId { get; set; }
