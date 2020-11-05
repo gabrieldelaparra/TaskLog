@@ -1,4 +1,4 @@
-﻿namespace TaskLog.Core.ViewModels
+﻿namespace TaskLog.Core.Services.Navigation
 {
     public enum NavigationType
     {

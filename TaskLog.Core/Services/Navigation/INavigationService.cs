@@ -1,7 +1,6 @@
 ﻿using System;
-using TaskLog.Core.ViewModels;
 
-namespace TaskLog.Core.Services
+namespace TaskLog.Core.Services.Navigation
 {
     public interface INavigationService
     {

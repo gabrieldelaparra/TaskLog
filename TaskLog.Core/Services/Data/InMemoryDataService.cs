@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using TaskLog.Core.Models;
+using TaskLog.Core.Services.DataLoader;
 using TaskLog.Core.Utilities;
 using TaskLog.Core.ViewModels;
 
-namespace TaskLog.Core.Services
+namespace TaskLog.Core.Services.Data
 {
     public class InMemoryDataService : IDataService
     {
@@ -13,23 +14,27 @@ namespace TaskLog.Core.Services
         private Dictionary<Guid, Project> _projects;
         private Dictionary<Guid, Task> _tasks;
         private Dictionary<Guid, Work> _works;
-        public InMemoryDataService(IDataLoaderService dataLoaderService) {
+        public InMemoryDataService(IDataLoaderService dataLoaderService)
+        {
             _dataLoaderService = dataLoaderService;
-            ReloadDataFromDisk();
+            ReloadData();
         }
 
-        public void ReloadDataFromDisk() {
+        public void ReloadData()
+        {
             _projects = _dataLoaderService.LoadProjects().ToDictionary(x => x.Id, x => x);
             _tasks = _dataLoaderService.LoadTasks().ToDictionary(x => x.Id, x => x);
             _works = _dataLoaderService.LoadWorks().ToDictionary(x => x.Id, x => x);
         }
 
-        public IEnumerable<Project> GetProjects() {
-            throw new NotImplementedException();
+        public IEnumerable<ProjectViewModel> GetProjects()
+        {
+            return _projects.Select(x => new ProjectViewModel(x.Value)).ToList();
         }
 
-        public IEnumerable<Task> GetTasks() {
-            throw new NotImplementedException();
+        public IEnumerable<TaskViewModel> GetTasks()
+        {
+            return _tasks.Select(x => new TaskViewModel(x.Value)).ToList();
         }
 
         public IEnumerable<WorkViewModel> GetWeekWorks(DateTime date)
@@ -51,24 +56,24 @@ namespace TaskLog.Core.Services
                 UpdateOrAddWork(taskInstanceViewModel);
         }
 
-        public Project GetProjectById(Guid id)
+        public ProjectViewModel GetProjectById(Guid id)
         {
             if (_projects.ContainsKey(id))
-                return _projects[id];
+                return new ProjectViewModel(_projects[id]);
             throw new Exception($"Project not found: {id}");
         }
 
-        public Task GetTaskById(Guid id)
+        public TaskViewModel GetTaskById(Guid id)
         {
             if (_tasks.ContainsKey(id))
-                return _tasks[id];
+                return new TaskViewModel(_tasks[id]);
             throw new Exception($"Task not found: {id}");
         }
 
-        public Work GetWorkById(Guid id)
+        public WorkViewModel GetWorkById(Guid id)
         {
             if (_works.ContainsKey(id))
-                return _works[id];
+                return new WorkViewModel(_works[id]);
             throw new Exception($"Work not found: {id}");
         }
 
