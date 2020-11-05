@@ -5,10 +5,13 @@ namespace TaskLog.Core.Models
 {
     public class Task
     {
-        public Guid Id { get; set; }
+        public Task() {
+            Id = new Guid();
+        }
+        public Guid Id { get; }
         public Guid ProjectId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public IList<Work> TaskInstances { get; set; } = new List<Work>();
+        //public IList<Guid> WorkIds { get; set; } = new List<Guid>();
     }
 }

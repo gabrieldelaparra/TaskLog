@@ -4,7 +4,10 @@ namespace TaskLog.Core.Models
 {
     public class Work
     {
-        public Guid Id { get; set; }
+        public Work() {
+            Id = new Guid();
+        }
+        public Guid Id { get; }
         public Guid ProjectId { get; set; }
         public Guid TaskId { get; set; }
         public DateTime Date { get; set; }
