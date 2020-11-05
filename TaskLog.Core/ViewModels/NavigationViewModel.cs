@@ -1,6 +1,7 @@
 ﻿using System;
 using MvvmCross.ViewModels;
 using TaskLog.Core.Services;
+using TaskLog.Core.Services.Navigation;
 using TaskLog.Core.Utilities;
 
 namespace TaskLog.Core.ViewModels
