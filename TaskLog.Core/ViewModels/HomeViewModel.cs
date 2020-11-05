@@ -12,14 +12,18 @@ namespace TaskLog.Core.ViewModels
         private readonly INavigationService _navigationService;
         public NavigationViewModel NavigationViewModel { get; set; }
         public DataDisplayViewModel DataDisplayViewModel { get; set; }
-        public HomeViewModel(IDataService dataService, INavigationService navigationService)
+        public HomeViewModel(IDataService dataService, INavigationService navigationService, 
+                NavigationViewModel navigationViewModel, DataDisplayViewModel dataDisplayViewModel)
         {
             _dataService = dataService;
-            
             _navigationService = navigationService;
+
             //TODO: Check if required to move these later to Prepare() or Initialize();
             _navigationService.OnNavigationDateChange = HandleNavigationDateChange;
             _navigationService.OnNavigationTypeChange = HandleNavigationTypeChange;
+
+            NavigationViewModel = navigationViewModel;
+            DataDisplayViewModel = dataDisplayViewModel;
 
             ReloadWorks();
         }

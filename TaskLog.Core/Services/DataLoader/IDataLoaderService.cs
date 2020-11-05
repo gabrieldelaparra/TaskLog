@@ -8,9 +8,8 @@ namespace TaskLog.Core.Services.DataLoader
         IEnumerable<Project> LoadProjects();
         IEnumerable<Task> LoadTasks();
         IEnumerable<Work> LoadWorks();
-
-         void SaveProjects(IEnumerable<Project> projects);
-         void SaveTasks(IEnumerable<Task> tasks);
-         void SaveWorks(IEnumerable<Work> works);
+        void SaveProjects(IEnumerable<Project> projects);
+        void SaveTasks(IEnumerable<Task> tasks);
+        void SaveWorks(IEnumerable<Work> works);
     }
 }

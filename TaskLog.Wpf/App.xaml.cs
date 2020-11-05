@@ -1,9 +1,6 @@
-﻿using MvvmCross;
-using MvvmCross.Core;
-using MvvmCross.IoC;
+﻿using MvvmCross.Core;
 using MvvmCross.Platforms.Wpf.Core;
 using MvvmCross.Platforms.Wpf.Views;
-using TaskLog.Core.Services;
 
 namespace TaskLog.Wpf
 {
@@ -16,7 +13,5 @@ namespace TaskLog.Wpf
         {
             this.RegisterSetupType<MvxWpfSetup<Core.App>>();
         }
-
-        
     }
 }

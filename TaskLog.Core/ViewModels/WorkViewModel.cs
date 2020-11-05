@@ -12,21 +12,21 @@ namespace TaskLog.Core.ViewModels
         private double _hours;
         private string _details;
         private WorkType _taskInstanceType = WorkType.Normal;
-        private Work Work { get; set; }
+        private Work Work { get; }
 
         public WorkViewModel() { }
 
         public WorkViewModel(Work work) {
-            ReadFromModel(work);
+            Work = work;
+            ReadFromModel(Work);
         }
 
-        public void ReadFromModel(Work work)
+        public void ReadFromModel(Work model)
         {
-            Work = work;
-            Date = Work.Date;
-            Hours = Work.Hours;
-            Details = Work.Details;
-            TaskInstanceType = Work.WorkType;
+            Date = model.Date;
+            Hours = model.Hours;
+            Details = model.Details;
+            TaskInstanceType = model.WorkType;
         }
 
         public Work WriteToModel()

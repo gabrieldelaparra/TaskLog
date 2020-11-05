@@ -12,12 +12,14 @@ namespace TaskLog.Core
     {
         public override void Initialize()
         {
-            RegisterAppStart<HomeViewModel>();
-
             Mvx.IoCProvider.ConstructAndRegisterSingleton<IFileConfiguration, JsonFileConfiguration>();
             Mvx.IoCProvider.ConstructAndRegisterSingleton<IDataLoaderService, JsonDataLoaderService>();
             Mvx.IoCProvider.ConstructAndRegisterSingleton<IDataService, InMemoryDataService>();
             Mvx.IoCProvider.ConstructAndRegisterSingleton<INavigationService, NavigationService>();
+            Mvx.IoCProvider.RegisterType<NavigationViewModel>();
+            Mvx.IoCProvider.RegisterType<DataDisplayViewModel>();
+
+            RegisterAppStart<HomeViewModel>();
         }
     }
 }

@@ -93,6 +93,21 @@ namespace TaskLog.UnitTests
         }
 
         [Fact]
+        public void RunSaveValuesToJson() {
+            Setup();
+            var dataService = Mvx.IoCProvider.Resolve<IDataService>();
+
+            var projects = dataService.GetProjects();
+            var tasks = dataService.GetTasks();
+            var works = dataService.GetWeekWorks(DateTime.Today);
+
+            var jsonDataService = new JsonDataLoaderService(new JsonFileConfiguration());
+            jsonDataService.SaveTasks(tasks.Select(x => x.WriteToModel()));
+            jsonDataService.SaveProjects(projects.Select(x => x.WriteToModel()));
+            jsonDataService.SaveWorks(works.Select(x=>x.WriteToModel()));
+        }
+
+        [Fact]
         public void TestActionNotifies()
         {
             var vm = new WorkViewModel();

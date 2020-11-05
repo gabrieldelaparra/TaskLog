@@ -1,4 +1,5 @@
-﻿using MvvmCross.Platforms.Wpf.Views;
+﻿using System;
+using MvvmCross.Platforms.Wpf.Views;
 
 namespace TaskLog.Wpf
 {
@@ -9,7 +10,13 @@ namespace TaskLog.Wpf
     {
         public MainWindow()
         {
-            InitializeComponent();
+            try {
+                InitializeComponent();
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
