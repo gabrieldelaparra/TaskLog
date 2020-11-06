@@ -10,7 +10,7 @@ namespace TaskLog.Core.ViewModels
     {
         private readonly IList<WorkViewModel> _taskInstances = new List<WorkViewModel>();
         public ObservableCollection<WorkDayViewModel> Days { get; private set; } = new ObservableCollection<WorkDayViewModel>();
-
+        public string TestString { get; set; } = "Test: WorkWeekViewModel";
         public void UpdateTaskInstances(IEnumerable<WorkViewModel> workViewModels)
         {
             //Clear the collection

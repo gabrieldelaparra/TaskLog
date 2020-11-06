@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using MvvmCross;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using TaskLog.Core.Services;
 using TaskLog.Core.Services.Data;
 using TaskLog.Core.Services.Navigation;
 
@@ -14,6 +13,19 @@ namespace TaskLog.Core.ViewModels
         private readonly IDataService _dataService;
         private readonly INavigationService _navigationService;
         private readonly IMvxNavigationService _mvxNavigationService;
+        private MvxViewModel _workWeekViewModel = new WorkWeekViewModel();
+
+        public MvxViewModel WorkWeekViewModel
+        {
+            get => _workWeekViewModel;
+            set
+            {
+                _workWeekViewModel = value;
+                RaisePropertyChanged(() => WorkWeekViewModel);
+            }
+        }
+
+        public string TestString { get; set; } = "Test: DataDisplayViewModel";
 
         public DataDisplayViewModel(IDataService dataService, INavigationService navigationService, IMvxNavigationService mvxNavigationService)
         {
@@ -60,15 +72,20 @@ namespace TaskLog.Core.ViewModels
             }
         }
 
-        public void ActivateWeekViewModel(IEnumerable<WorkViewModel> workViewModels)
-        {
-            var workWeekViewModel = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
-            workWeekViewModel.UpdateTaskInstances(workViewModels);
-            _mvxNavigationService.Navigate(workWeekViewModel);
+        public void ActivateWeekViewModel(IEnumerable<WorkViewModel> workViewModels) {
+            var day = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
+            WorkWeekViewModel = day;
+            //WorkWeekViewModel = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
+            //((WorkWeekViewModel)WorkWeekViewModel)?.UpdateTaskInstances(workViewModels);
+            //WorkWeekViewModel = 
+            //ActiveViewModel = workWeekViewModel;
+            //_mvxNavigationService.Navigate(WorkWeekViewModel);
         }
 
         public void ActivateMonthViewModel(IEnumerable<WorkViewModel> workViewModels)
         {
+            var day = Mvx.IoCProvider.Resolve<WorkDayViewModel>();
+            WorkWeekViewModel = day;
             //var workWeekViewModel = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
             //workWeekViewModel.UpdateTaskInstances(workViewModels);
             //_mvxNavigationService.Navigate(workWeekViewModel);

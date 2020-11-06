@@ -36,7 +36,8 @@ namespace TaskLog.Core.Services.Navigation
         }
 
         public void ChangeNavigationToWeek() {
-            if (NavigationType == NavigationType.Week) return;
+            ////TODO: Remove this comment:
+            //if (NavigationType == NavigationType.Week) return;
             NavigationType = NavigationType.Week;
         }
 

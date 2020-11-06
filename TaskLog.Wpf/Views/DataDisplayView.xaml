@@ -7,9 +7,51 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TaskLog.Wpf.Views"
+             xmlns:viewModels="clr-namespace:TaskLog.Core.ViewModels;assembly=TaskLog.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock>DataDisplayView</TextBlock>
-    </Grid>
+    <StackPanel>
+        <TextBlock Text="{Binding TestString}" />
+        <UserControl DataContext="{Binding WorkWeekViewModel}">
+            <TextBlock Text="{Binding TestString}"></TextBlock>
+        </UserControl>
+        <!--<ContentControl DataContext="{Binding WorkWeekViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:WorkWeekViewModel}">
+                <local:WorkWeekView></local:WorkWeekView>
+            </DataTemplate>
+        </ContentControl>-->
+        <!--<ContentPresenter Content="{Binding WorkWeekViewModel}" />
+        <ContentControl DataContext="{Binding WorkWeekViewModel}">
+        </ContentControl>-->
+    </StackPanel>
+    <!--<views:MvxWpfView.ContentTemplate>
+        <DataTemplate>
+            <StackPanel>
+                <TextBlock>DataDisplayView - End</TextBlock>
+                <ContentPresenter Content="{Binding WorkWeekViewModel}" />
+            </StackPanel>
+        </DataTemplate>
+    </views:MvxWpfView.ContentTemplate>-->
+
+    <!--<StackPanel>
+        <TextBlock>ContentPresenter - DataContext</TextBlock>
+        <ContentPresenter DataContext="{Binding WorkWeekViewModel}"/>
+        <TextBlock>ContentPresenter - Content</TextBlock>
+        <ContentPresenter Content="{Binding WorkWeekViewModel}" />
+        <TextBlock>ContentControl - DataContext</TextBlock>
+        <ContentControl DataContext="{Binding WorkWeekViewModel}"/>
+        <TextBlock>ContentControl - Content</TextBlock>
+        <ContentControl Content="{Binding WorkWeekViewModel}"/>
+        <TextBlock>UserControl - DataContext</TextBlock>
+        <UserControl DataContext="{Binding WorkWeekViewModel}"/>
+        <TextBlock>UserControl - Content</TextBlock>
+        <UserControl Content="{Binding WorkWeekViewModel}"/>
+        <TextBlock>MvxWpfView - DataContext</TextBlock>
+        <views:MvxWpfView DataContext="{Binding WorkWeekViewModel}" />
+        <TextBlock>MvxWpfView - Content</TextBlock>
+        <views:MvxWpfView Content="{Binding WorkWeekViewModel}" />
+        <TextBlock>DataDisplayView - End</TextBlock>
+        <local:WorkWeekView></local:WorkWeekView>
+        <ContentPresenter Content="{Binding}" />
+    </StackPanel>-->
 </views:MvxWpfView>

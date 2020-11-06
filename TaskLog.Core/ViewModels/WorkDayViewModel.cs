@@ -21,7 +21,7 @@ namespace TaskLog.Core.ViewModels
                 SetProperty(ref _date, value);
             }
         }
-
+        public string TestString { get; set; } = "Test: WorkDayViewModel";
         public void UpdateTaskInstances(IEnumerable<WorkViewModel> taskInstances)
         {
             TaskInstances.Clear();

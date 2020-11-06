@@ -11,6 +11,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
         <TextBlock Text="{Binding NavigationPeriod, FallbackValue='Fallback'}"></TextBlock>
-        <Button mvx:Bi.nd="Command ChangeNavigationToWeekCommand">Week View</Button>
+        <!--<Button mvx:Bi.nd="Command ChangeNavigationToWeekCommand">Week View</Button>-->
+        <Button Command="{Binding ChangeNavigationToWeekCommand}">Week View</Button>
+        <Button Command="{Binding ChangeNavigationToMonthCommand}">Month View</Button>
     </StackPanel>
 </views:MvxWpfView>

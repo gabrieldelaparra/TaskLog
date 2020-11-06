@@ -9,7 +9,7 @@
              xmlns:local="clr-namespace:TaskLog.Wpf.Views"
              mc:Ignorable="d" Background="Gray"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid MaxHeight="100" MaxWidth="100">
         <local:WorkView></local:WorkView>
     </Grid>
 </views:MvxWpfView>

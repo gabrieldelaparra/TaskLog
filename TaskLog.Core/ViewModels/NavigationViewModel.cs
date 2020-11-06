@@ -9,10 +9,11 @@ namespace TaskLog.Core.ViewModels
     public class NavigationViewModel : MvxViewModel
     {
         private readonly INavigationService _navigationService;
+        public IMvxCommand ChangeNavigationToWeekCommand => new MvxCommand(ChangeNavigationToWeek);
+        public IMvxCommand ChangeNavigationToMonthCommand => new MvxCommand(ChangeNavigationToMonth);
 
         public NavigationViewModel(INavigationService navigationService) {
             _navigationService = navigationService;
-            ChangeNavigationToWeekCommand = new MvxCommand(ChangeNavigationToWeek);
         }
 
         private string MonthPeriodLabel => $"Month: {_navigationService.NavigationDate.Month}";
@@ -28,8 +29,6 @@ namespace TaskLog.Core.ViewModels
                 };
             }
         }
-
-        public IMvxCommand ChangeNavigationToWeekCommand { get; set; }
 
         private string WeekPeriodLabel =>
                 $"Week: {_navigationService.NavigationDate.StartOfWeek().ToShortDateString()} to {_navigationService.NavigationDate.StartOfWeek().AddDays(5).ToShortDateString()}";
@@ -59,8 +58,8 @@ namespace TaskLog.Core.ViewModels
             RaisePropertyChanged(() => NavigationPeriod);
         }
 
-        public override void Prepare() {
-            RaisePropertyChanged(() => NavigationPeriod);
-        }
+        //public override void Prepare() {
+        //    RaisePropertyChanged(() => NavigationPeriod);
+        //}
     }
 }
