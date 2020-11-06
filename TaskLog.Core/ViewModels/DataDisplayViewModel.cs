@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using MvvmCross;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using TaskLog.Core.Services;
@@ -7,33 +9,69 @@ using TaskLog.Core.Services.Navigation;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class DataDisplayViewModel : MvxViewModel, IWorkCollection
+    public class DataDisplayViewModel : MvxViewModel
     {
         private readonly IDataService _dataService;
         private readonly INavigationService _navigationService;
         private readonly IMvxNavigationService _mvxNavigationService;
-        private IWorkCollection _activeDataDisplayViewModel;
 
-        public DataDisplayViewModel(IDataService dataService, INavigationService navigationService, IMvxNavigationService mvxNavigationService) {
+        public DataDisplayViewModel(IDataService dataService, INavigationService navigationService, IMvxNavigationService mvxNavigationService)
+        {
             _dataService = dataService;
             _navigationService = navigationService;
+            
+            // TODO: Check if this should be here or in Home. Not sure about what is a better architecture.
+            _navigationService.OnNavigationDateChange = HandleNavigationDateChange;
+            _navigationService.OnNavigationTypeChange = HandleNavigationTypeChange;
+
             _mvxNavigationService = mvxNavigationService;
 
-            //TODO: Not sure if required;
-            _activeDataDisplayViewModel = new WorkWeekViewModel();
+            ReloadWorks();
         }
 
-        public void UpdateTaskInstances(IEnumerable<WorkViewModel> workViewModels) {
-            _activeDataDisplayViewModel.UpdateTaskInstances(workViewModels);
+        private void HandleNavigationTypeChange()
+        {
+            ReloadWorks();
         }
 
-        public void ActivateWeekViewModel() {
-            _activeDataDisplayViewModel = new WorkWeekViewModel();
-            _mvxNavigationService.Navigate(_activeDataDisplayViewModel as WorkWeekViewModel);
+        private void HandleNavigationDateChange()
+        {
+            ReloadWorks();
         }
 
-        public void ActivateMonthViewModel() {
-            //_mvxNavigationService.Navigate(new WorkWeekViewModel());
+        private void ReloadWorks()
+        {
+            switch (_navigationService.NavigationType)
+            {
+                case NavigationType.Week:
+                    {
+                        var works = _dataService.GetWeekWorks(_navigationService.NavigationDate);
+                        ActivateWeekViewModel(works);
+                        break;
+                    }
+                case NavigationType.Month:
+                    {
+                        var works = _dataService.GetMonthWorks(_navigationService.NavigationDate);
+                        ActivateMonthViewModel(works);
+                        break;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void ActivateWeekViewModel(IEnumerable<WorkViewModel> workViewModels)
+        {
+            var workWeekViewModel = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
+            workWeekViewModel.UpdateTaskInstances(workViewModels);
+            _mvxNavigationService.Navigate(workWeekViewModel);
+        }
+
+        public void ActivateMonthViewModel(IEnumerable<WorkViewModel> workViewModels)
+        {
+            //var workWeekViewModel = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
+            //workWeekViewModel.UpdateTaskInstances(workViewModels);
+            //_mvxNavigationService.Navigate(workWeekViewModel);
         }
     }
 }

@@ -10,13 +10,7 @@ namespace TaskLog.Wpf
     {
         public MainWindow()
         {
-            try {
-                InitializeComponent();
-            }
-            catch (Exception e) {
-                Console.WriteLine(e);
-                throw;
-            }
+            InitializeComponent();
         }
     }
 }

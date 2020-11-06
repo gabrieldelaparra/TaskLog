@@ -1,6 +1,6 @@
 ﻿using System;
+using MvvmCross.Commands;
 using MvvmCross.ViewModels;
-using TaskLog.Core.Services;
 using TaskLog.Core.Services.Navigation;
 using TaskLog.Core.Utilities;
 
@@ -12,6 +12,7 @@ namespace TaskLog.Core.ViewModels
 
         public NavigationViewModel(INavigationService navigationService) {
             _navigationService = navigationService;
+            ChangeNavigationToWeekCommand = new MvxCommand(ChangeNavigationToWeek);
         }
 
         private string MonthPeriodLabel => $"Month: {_navigationService.NavigationDate.Month}";
@@ -27,6 +28,8 @@ namespace TaskLog.Core.ViewModels
                 };
             }
         }
+
+        public IMvxCommand ChangeNavigationToWeekCommand { get; set; }
 
         private string WeekPeriodLabel =>
                 $"Week: {_navigationService.NavigationDate.StartOfWeek().ToShortDateString()} to {_navigationService.NavigationDate.StartOfWeek().AddDays(5).ToShortDateString()}";

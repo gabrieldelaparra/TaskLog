@@ -12,12 +12,19 @@ namespace TaskLog.Core
     {
         public override void Initialize()
         {
-            Mvx.IoCProvider.ConstructAndRegisterSingleton<IFileConfiguration, JsonFileConfiguration>();
-            Mvx.IoCProvider.ConstructAndRegisterSingleton<IDataLoaderService, JsonDataLoaderService>();
-            Mvx.IoCProvider.ConstructAndRegisterSingleton<IDataService, InMemoryDataService>();
-            Mvx.IoCProvider.ConstructAndRegisterSingleton<INavigationService, NavigationService>();
-            Mvx.IoCProvider.RegisterType<NavigationViewModel>();
-            Mvx.IoCProvider.RegisterType<DataDisplayViewModel>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IFileConfiguration, JsonFileConfiguration>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDataLoaderService, JsonDataLoaderService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDataService, InMemoryDataService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<INavigationService, NavigationService>();
+            // I think that singletons would do for both the Navigation and DataDisplay
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<NavigationViewModel, NavigationViewModel>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<DataDisplayViewModel, DataDisplayViewModel>();
+
+            Mvx.IoCProvider.RegisterType<WorkWeekViewModel>();
+            Mvx.IoCProvider.RegisterType<WorkDayViewModel>();
+            Mvx.IoCProvider.RegisterType<WorkViewModel>();
+            Mvx.IoCProvider.RegisterType<ProjectViewModel>();
+            Mvx.IoCProvider.RegisterType<TaskViewModel>();
 
             RegisterAppStart<HomeViewModel>();
         }
