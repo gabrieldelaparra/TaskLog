@@ -12,6 +12,6 @@
     <StackPanel>
         <TextBlock Text="{Binding TestString}" FontSize="30" />
         <TextBlock Text="{Binding TestString}" FontSize="16" />
-        <!--<local:WorkView></local:WorkView>-->
+        <local:WorkView></local:WorkView>
     </StackPanel>
 </views:MvxWpfView>
