@@ -7,6 +7,7 @@ namespace TaskLog.Core.ViewModels
 {
     public class WorkViewModel : MvxViewModel
     {
+        public string TestString { get; set; } = "Test: WorkViewModel";
         public Guid Id { get; set; }
         private DateTime _date;
         private double _hours;

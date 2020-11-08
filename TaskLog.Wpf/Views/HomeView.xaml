@@ -10,10 +10,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <StackPanel>
-            <local:NavigationView DataContext="{Binding NavigationViewModel}" />
-            <local:DataDisplayView DataContext="{Binding DataDisplayViewModel}" />
-        </StackPanel>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <local:NavigationView Grid.Row="0" DataContext="{Binding NavigationViewModel}" />
+        <local:DataDisplayView Grid.Row="1" DataContext="{Binding DataDisplayViewModel}" />
+
     </Grid>
 </views:MvxWpfView>

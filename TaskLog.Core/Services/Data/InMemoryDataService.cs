@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using TaskLog.Core.Models;
 using TaskLog.Core.Services.DataLoader;
 using TaskLog.Core.Utilities;
@@ -11,9 +12,9 @@ namespace TaskLog.Core.Services.Data
     public class InMemoryDataService : IDataService
     {
         private readonly IDataLoaderService _dataLoaderService;
-        private Dictionary<Guid, Project> _projects;
-        private Dictionary<Guid, Task> _tasks;
-        private Dictionary<Guid, Work> _works;
+        private Dictionary<Guid, Project> _projects = new Dictionary<Guid, Project>();
+        private Dictionary<Guid, Task> _tasks = new Dictionary<Guid, Task>();
+        private Dictionary<Guid, Work> _works = new Dictionary<Guid, Work>();
         public InMemoryDataService(IDataLoaderService dataLoaderService)
         {
             _dataLoaderService = dataLoaderService;
@@ -22,9 +23,15 @@ namespace TaskLog.Core.Services.Data
 
         public void ReloadData()
         {
-            _projects = _dataLoaderService.LoadProjects().ToDictionary(x => x.Id, x => x);
-            _tasks = _dataLoaderService.LoadTasks().ToDictionary(x => x.Id, x => x);
-            _works = _dataLoaderService.LoadWorks().ToDictionary(x => x.Id, x => x);
+            var loadProjects = _dataLoaderService.LoadProjects();
+            var loadTasks = _dataLoaderService.LoadTasks();
+            var loadWorks = _dataLoaderService.LoadWorks();
+            if (loadProjects != null && loadProjects.Any())
+                _projects = loadProjects.ToDictionary(x => x.Id, x => x);
+            if (loadTasks != null && loadTasks.Any())
+                _tasks = loadTasks.ToDictionary(x => x.Id, x => x);
+            if (loadWorks != null && loadWorks.Any())
+                _works = loadWorks.ToDictionary(x => x.Id, x => x);
         }
 
         public IEnumerable<ProjectViewModel> GetProjects()

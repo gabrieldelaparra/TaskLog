@@ -10,48 +10,186 @@
              xmlns:viewModels="clr-namespace:TaskLog.Core.ViewModels;assembly=TaskLog.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <TextBlock Text="{Binding TestString}" />
-        <UserControl DataContext="{Binding WorkWeekViewModel}">
-            <TextBlock Text="{Binding TestString}"></TextBlock>
-        </UserControl>
-        <!--<ContentControl DataContext="{Binding WorkWeekViewModel}">
+
+
+
+
+    <!--<views:MvxWpfView DataContext="{Binding ActiveViewModel}">
+        <views:MvxWpfView.Resources>
+            <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                <local:WorkWeekView />
+            </DataTemplate>
+            <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                <local:WorkView />
+            </DataTemplate>
+        </views:MvxWpfView.Resources>
+        <ContentPresenter Content="{Binding}" />
+    </views:MvxWpfView>-->
+
+    <!--<ContentControl DataContext="{Binding ActiveViewModel}">
+        <views:MvxWpfView.ContentTemplate />
+        --><!--<ContentPresenter Content="{Binding}" />-->
+        <!--<ContentControl Content="{Binding ActiveViewModel}" />-->
+        <!--<DataTemplate DataType="{x:Type viewModels:WorkWeekViewModel}">
+            <local:WorkWeekView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:WorkViewModel}">
+            <local:WorkView />
+        </DataTemplate>-->
+        <!--<views:MvxWpfView Content="{Binding}"></views:MvxWpfView>-->
+        <!--<local:WorkWeekView></local:WorkWeekView>--><!--
+    </ContentControl>-->
+
+    <!--<UserControl DataContext="{Binding WorkWeekViewModel}">
+        <TextBlock Text="{Binding TestString}"></TextBlock>
+    </UserControl>-->
+
+    <!--<ContentControl DataContext="{Binding WorkWeekViewModel}">
             <DataTemplate DataType="{x:Type viewModels:WorkWeekViewModel}">
                 <local:WorkWeekView></local:WorkWeekView>
             </DataTemplate>
         </ContentControl>-->
-        <!--<ContentPresenter Content="{Binding WorkWeekViewModel}" />
+    <!--<ContentPresenter Content="{Binding WorkWeekViewModel}" />
         <ContentControl DataContext="{Binding WorkWeekViewModel}">
         </ContentControl>-->
-    </StackPanel>
     <!--<views:MvxWpfView.ContentTemplate>
         <DataTemplate>
             <StackPanel>
                 <TextBlock>DataDisplayView - End</TextBlock>
-                <ContentPresenter Content="{Binding WorkWeekViewModel}" />
+                <ContentPresenter Content="{Binding}" />
             </StackPanel>
         </DataTemplate>
     </views:MvxWpfView.ContentTemplate>-->
 
     <!--<StackPanel>
-        <TextBlock>ContentPresenter - DataContext</TextBlock>
-        <ContentPresenter DataContext="{Binding WorkWeekViewModel}"/>
-        <TextBlock>ContentPresenter - Content</TextBlock>
-        <ContentPresenter Content="{Binding WorkWeekViewModel}" />
-        <TextBlock>ContentControl - DataContext</TextBlock>
-        <ContentControl DataContext="{Binding WorkWeekViewModel}"/>
-        <TextBlock>ContentControl - Content</TextBlock>
-        <ContentControl Content="{Binding WorkWeekViewModel}"/>
-        <TextBlock>UserControl - DataContext</TextBlock>
-        <UserControl DataContext="{Binding WorkWeekViewModel}"/>
-        <TextBlock>UserControl - Content</TextBlock>
-        <UserControl Content="{Binding WorkWeekViewModel}"/>
-        <TextBlock>MvxWpfView - DataContext</TextBlock>
-        <views:MvxWpfView DataContext="{Binding WorkWeekViewModel}" />
-        <TextBlock>MvxWpfView - Content</TextBlock>
-        <views:MvxWpfView Content="{Binding WorkWeekViewModel}" />
-        <TextBlock>DataDisplayView - End</TextBlock>
+        <TextBlock Text="{Binding TestString}" />-->
+
+
+    <!--<UserControl DataContext="{Binding WorkWeekViewModel}">
+            <TextBlock Text="{Binding TestString}"></TextBlock>
+        </UserControl>-->
+
+    <!--<ContentControl Content="{Binding ActiveViewModel, Mode=TwoWay}" />-->
+
+    <StackPanel>
+        <TextBlock FontWeight="Bold">1. ContentPresenter - DataContext</TextBlock>
+        <ContentPresenter DataContext="{Binding ActiveViewModel}">
+            <ContentPresenter.Resources>
+                <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+
+        <TextBlock FontWeight="Bold">2. ContentPresenter - Content</TextBlock>
+        <ContentPresenter Content="{Binding ActiveViewModel}" >
+            <ContentPresenter.Resources>
+                <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+
+        <TextBlock FontWeight="Bold">3. ContentControl - DataContext</TextBlock>
+        <ContentControl DataContext="{Binding ActiveViewModel}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </ContentControl.Resources>
+            <ContentPresenter Content="{Binding}" />
+            <!--<ContentControl Content="{Binding }" />-->
+        </ContentControl>
+
+        <TextBlock FontWeight="Bold">4. ContentControl - Content</TextBlock>
+        <ContentControl Content="{Binding ActiveViewModel}">
+            <ContentControl.Resources>
+                <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
+
+        <TextBlock FontWeight="Bold">5. UserControl - DataContext</TextBlock>
+        <UserControl DataContext="{Binding ActiveViewModel}">
+            <UserControl.Resources>
+                <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </UserControl.Resources>
+            <!--<DataTemplate DataType="{x:Type viewModels:WorkViewModel}">
+                <local:WorkView />
+            </DataTemplate>-->
+            <!--<TextBlock Text="{Binding TestString}"></TextBlock>-->
+        </UserControl>
+
+        <TextBlock FontWeight="Bold">6. UserControl - Content</TextBlock>
+        <UserControl Content="{Binding ActiveViewModel}">
+            <UserControl.Resources>
+                <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </UserControl.Resources>
+        </UserControl>
+
+        <TextBlock FontWeight="Bold">7. MvxWpfView - DataContext</TextBlock>
+        <views:MvxWpfView DataContext="{Binding ActiveViewModel}">
+            <views:MvxWpfView.Resources>
+                <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </views:MvxWpfView.Resources>
+        </views:MvxWpfView>
+
+        <TextBlock FontWeight="Bold">8. MvxWpfView - Content</TextBlock>
+        <views:MvxWpfView Content="{Binding ActiveViewModel}">
+            <views:MvxWpfView.Resources>
+                <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </views:MvxWpfView.Resources>
+        </views:MvxWpfView>
+
+        <TextBlock FontWeight="Bold">9. MvxWpfView - Name</TextBlock>
+        <views:MvxWpfView x:Name="ActiveViewModel">
+            <views:MvxWpfView.Resources>
+                <DataTemplate x:Key="{x:Type viewModels:WorkWeekViewModel}">
+                    <local:WorkWeekView />
+                </DataTemplate>
+                <DataTemplate x:Key="{x:Type viewModels:WorkViewModel}">
+                    <local:WorkView />
+                </DataTemplate>
+            </views:MvxWpfView.Resources>
+        </views:MvxWpfView>
+
+        <TextBlock FontWeight="Bold">10. DataDisplayView - Direct</TextBlock>
         <local:WorkWeekView></local:WorkWeekView>
-        <ContentPresenter Content="{Binding}" />
-    </StackPanel>-->
+        <local:WorkView></local:WorkView>
+    </StackPanel>
+
+
 </views:MvxWpfView>

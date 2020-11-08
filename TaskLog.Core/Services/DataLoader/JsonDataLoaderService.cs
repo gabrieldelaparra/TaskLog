@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using TaskLog.Core.Models;
 
 namespace TaskLog.Core.Services.DataLoader
@@ -11,16 +13,23 @@ namespace TaskLog.Core.Services.DataLoader
             _fileConfiguration = fileConfiguration;
         }
 
-        public IEnumerable<Project> LoadProjects() {
-            return Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Project>>(_fileConfiguration.ProjectsFilename);
+        public IEnumerable<Project> LoadProjects()
+        {
+            return File.Exists(_fileConfiguration.ProjectsFilename) 
+                ? Array.Empty<Project>() 
+                : Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Project>>(_fileConfiguration.ProjectsFilename);
         }
 
         public IEnumerable<Task> LoadTasks() {
-            return Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Task>>(_fileConfiguration.TasksFilename);
+            return File.Exists(_fileConfiguration.TasksFilename) 
+                ? Array.Empty<Task>() 
+                : Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Task>>(_fileConfiguration.TasksFilename);
         }
 
         public IEnumerable<Work> LoadWorks() {
-            return Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Work>>(_fileConfiguration.WorksFilename);
+            return File.Exists(_fileConfiguration.WorksFilename) 
+                ? Array.Empty<Work>() 
+                : Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Work>>(_fileConfiguration.WorksFilename);
         }
 
         public void SaveProjects(IEnumerable<Project> projects) {
