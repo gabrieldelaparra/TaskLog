@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using MvvmCross;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using MvvmCross.Views;
-
 using TaskLog.Core.Services.Data;
 using TaskLog.Core.Services.Navigation;
 
@@ -17,13 +14,6 @@ namespace TaskLog.Core.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IMvxNavigationService _mvxNavigationService;
         private MvxViewModel _activeViewModel = new WorkWeekViewModel();
-
-        private IMvxView _activeView;
-        public IMvxView ActiveView
-        {
-            get { return _activeView; }
-            set { _activeView = value; }
-        }
 
         public MvxViewModel ActiveViewModel
         {
