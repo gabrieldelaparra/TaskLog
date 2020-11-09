@@ -4,6 +4,6 @@ namespace TaskLog.Core.ViewModels
 {
     public interface IWorkCollection
     {
-        void UpdateTaskInstances(IEnumerable<WorkViewModel> workViewModels);
+        void UpdateWorks(IEnumerable<WorkViewModel> workViewModels);
     }
 }

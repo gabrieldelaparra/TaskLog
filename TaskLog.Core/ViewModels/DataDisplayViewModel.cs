@@ -76,22 +76,15 @@ namespace TaskLog.Core.ViewModels
         public void ActivateWeekViewModel(IEnumerable<WorkViewModel> workViewModels)
         {
             var viewModel = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
+            viewModel?.UpdateWorks(workViewModels);
             ActiveViewModel = viewModel;
-            //ActiveView = Mvx.IoCProvider.Resolve<IMvxViewsContainer>().CreateView(MvxViewModelRequest<WorkWeekViewModel>.GetDefaultRequest());
-            //WorkWeekViewModel = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
-            //((WorkWeekViewModel)WorkWeekViewModel)?.UpdateTaskInstances(workViewModels);
-            //WorkWeekViewModel = 
-            //ActiveViewModel = workWeekViewModel;
-            //_mvxNavigationService.Navigate(ActiveViewModel);
         }
 
         public void ActivateMonthViewModel(IEnumerable<WorkViewModel> workViewModels)
         {
             var viewModel = Mvx.IoCProvider.Resolve<WorkViewModel>();
+            //viewModel?.UpdateTaskInstances(workViewModels);
             ActiveViewModel = viewModel;
-            //var workWeekViewModel = Mvx.IoCProvider.Resolve<WorkWeekViewModel>();
-            //workWeekViewModel.UpdateTaskInstances(workViewModels);
-            //_mvxNavigationService.Navigate(ActiveViewModel);
         }
     }
 }

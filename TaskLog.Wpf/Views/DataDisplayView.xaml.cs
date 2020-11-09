@@ -5,7 +5,7 @@ namespace TaskLog.Wpf.Views
     /// <summary>
     /// Interaction logic for DataDisplayView.xaml
     /// </summary>
-    public partial class DataDisplayView : IMvxWpfView
+    public partial class DataDisplayView : MvxWpfView
     {
         public DataDisplayView()
         {

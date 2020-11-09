@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using TaskLog.Core.Models;
 using TaskLog.Core.Services.DataLoader;
 using TaskLog.Core.Utilities;
@@ -47,14 +46,14 @@ namespace TaskLog.Core.Services.Data
         public IEnumerable<WorkViewModel> GetWeekWorks(DateTime date)
         {
             var calendarWeek = date.GetCalendarWeek();
-            var taskInstances = _works.Where(x => x.Value.Date.GetCalendarWeek().Equals(calendarWeek));
-            return taskInstances.Select(x => new WorkViewModel(x.Value)).ToList();
+            var works = _works.Where(x => x.Value.Date.GetCalendarWeek().Equals(calendarWeek));
+            return works.Select(x => new WorkViewModel(x.Value)).ToList();
         }
 
         public IEnumerable<WorkViewModel> GetMonthWorks(DateTime date)
         {
-            var taskInstances = _works.Select(x => x.Value).Where(x => x.Date.Month.Equals(date.Month));
-            return taskInstances.Select(taskInstance => new WorkViewModel(taskInstance)).ToList();
+            var works = _works.Select(x => x.Value).Where(x => x.Date.Month.Equals(date.Month));
+            return works.Select(taskInstance => new WorkViewModel(taskInstance)).ToList();
         }
 
         public void SetWorks(IEnumerable<WorkViewModel> workViewModels)
@@ -84,9 +83,9 @@ namespace TaskLog.Core.Services.Data
             throw new Exception($"Work not found: {id}");
         }
 
-        private void UpdateOrAddWork(WorkViewModel taskInstanceViewModel)
+        private void UpdateOrAddWork(WorkViewModel workViewModel)
         {
-            var model = taskInstanceViewModel.WriteToModel();
+            var model = workViewModel.WriteToModel();
 
             if (_works.ContainsKey(model.Id))
                 _works[model.Id] = model;

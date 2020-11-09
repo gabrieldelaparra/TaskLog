@@ -14,5 +14,8 @@ namespace TaskLog.Core.Models
         public double Hours { get; set; }
         public string Details { get; set; }
         public WorkType WorkType { get; set; } = WorkType.Normal;
+        public override string ToString() {
+            return $"[{WorkType}] ({Hours}) - {Details}";
+        }
     }
 }

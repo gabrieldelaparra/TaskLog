@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using MvvmCross.ViewModels;
 using TaskLog.Core.Models;
 using TaskLog.Core.Utilities;
@@ -21,6 +22,8 @@ namespace TaskLog.Core.ViewModels
             Work = work;
             ReadFromModel(Work);
         }
+
+        public string Header => Work.ToString();
 
         public void ReadFromModel(Work model)
         {

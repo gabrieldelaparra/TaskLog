@@ -11,7 +11,7 @@ namespace TaskLog.Core.ViewModels
     {
         private DateTime _date;
 
-        public ObservableCollection<WorkViewModel> TaskInstances { get; private set; } = new ObservableCollection<WorkViewModel>();
+        public ObservableCollection<WorkViewModel> Works { get; private set; } = new ObservableCollection<WorkViewModel>();
         public DateTime Date
         {
             get => _date;
@@ -22,17 +22,23 @@ namespace TaskLog.Core.ViewModels
             }
         }
         public string TestString { get; set; } = "Test: WorkDayViewModel";
-        public void UpdateTaskInstances(IEnumerable<WorkViewModel> taskInstances)
+        public string Header { get; set; }
+        public void UpdateWorks(IEnumerable<WorkViewModel> workViewModels)
         {
-            TaskInstances.Clear();
-            foreach (var taskInstanceViewModel in taskInstances)
+            if (!workViewModels.Any())
+                return;
+
+            Works.Clear();
+            foreach (var work in workViewModels)
             {
-                TaskInstances.Add(taskInstanceViewModel);
-                taskInstanceViewModel.OnNotifyHoursChanged = HandleNotifyHoursChanged;
+                Works.Add(work);
+                work.OnNotifyHoursChanged = HandleNotifyHoursChanged;
             }
+            Header = Date.ToShortDateString();
 
             RaisePropertyChanged(() => SumHours);
             RaisePropertyChanged(() => IsValidSumHours);
+            RaisePropertyChanged(() => Header);
         }
 
         private void HandleNotifyHoursChanged(WorkViewModel task)
@@ -41,7 +47,7 @@ namespace TaskLog.Core.ViewModels
             RaisePropertyChanged(() => IsValidSumHours);
         }
 
-        public double SumHours => TaskInstances.Sum(x => x.Hours);
+        public double SumHours => Works.Sum(x => x.Hours);
         public bool IsValidSumHours => SumHours == 8.0;
 
     }

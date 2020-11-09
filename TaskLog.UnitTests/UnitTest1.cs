@@ -93,7 +93,7 @@ namespace TaskLog.UnitTests
         }
 
         [Fact]
-        public void RunSaveValuesToJson() {
+        public void RunSaveValuesToJsonForWpfTests() {
             Setup();
             var dataService = Mvx.IoCProvider.Resolve<IDataService>();
 
@@ -101,7 +101,11 @@ namespace TaskLog.UnitTests
             var tasks = dataService.GetTasks();
             var works = dataService.GetWeekWorks(DateTime.Today);
 
-            var jsonDataService = new JsonDataLoaderService(new JsonFileConfiguration());
+            var jsonDataService = new JsonDataLoaderService(new JsonFileConfiguration() {
+                ProjectsFilename = @"..\..\..\..\TaskLog.Wpf\bin\Debug\netcoreapp3.1\Projects.json",
+                TasksFilename = @"..\..\..\..\TaskLog.Wpf\bin\Debug\netcoreapp3.1\Tasks.json",
+                WorksFilename = @"..\..\..\..\TaskLog.Wpf\bin\Debug\netcoreapp3.1\Works.json",
+            });
             jsonDataService.SaveTasks(tasks.Select(x => x.WriteToModel()));
             jsonDataService.SaveProjects(projects.Select(x => x.WriteToModel()));
             jsonDataService.SaveWorks(works.Select(x=>x.WriteToModel()));

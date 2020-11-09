@@ -15,19 +15,19 @@ namespace TaskLog.Core.Services.DataLoader
 
         public IEnumerable<Project> LoadProjects()
         {
-            return File.Exists(_fileConfiguration.ProjectsFilename) 
-                ? Array.Empty<Project>() 
+            return !File.Exists(_fileConfiguration.ProjectsFilename)
+                ? Array.Empty<Project>()
                 : Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Project>>(_fileConfiguration.ProjectsFilename);
         }
 
         public IEnumerable<Task> LoadTasks() {
-            return File.Exists(_fileConfiguration.TasksFilename) 
-                ? Array.Empty<Task>() 
+            return !File.Exists(_fileConfiguration.TasksFilename)
+                ? Array.Empty<Task>()
                 : Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Task>>(_fileConfiguration.TasksFilename);
         }
 
         public IEnumerable<Work> LoadWorks() {
-            return File.Exists(_fileConfiguration.WorksFilename) 
+            return !File.Exists(_fileConfiguration.WorksFilename) 
                 ? Array.Empty<Work>() 
                 : Wororo.Utilities.JsonSerialization.DeserializeJson<IEnumerable<Work>>(_fileConfiguration.WorksFilename);
         }
