@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using MvvmCross.ViewModels;
+using TaskLog.Core.Utilities;
 
 namespace TaskLog.Core.ViewModels
 {
@@ -10,11 +11,14 @@ namespace TaskLog.Core.ViewModels
     {
         private readonly IList<WorkViewModel> _works = new List<WorkViewModel>();
         public ObservableCollection<WorkDayViewModel> Days { get; private set; } = new ObservableCollection<WorkDayViewModel>();
-        public string TestString { get; set; } = "Test: WorkWeekViewModel";
-        public string Header { get; set; }
+        private DateTime FirstDay => Days.FirstOrDefault()?.Date ?? DateTime.Today.StartOfWeek();
+        private DateTime LastDay => FirstDay.AddDays(4);
+        public string Header => $"{FirstDay.ToShortDateString()} - {LastDay.ToShortDateString()}: ({SumHours})";
         public void UpdateWorks(IEnumerable<WorkViewModel> workViewModels) {
-            if (!workViewModels.Any()) 
-                return;
+            ////If no items are give, then do nothing
+            //if (!workViewModels.Any()) 
+            //    return;
+
             //Clear the collection
             Days.Clear();
             _works.Clear();
@@ -28,18 +32,21 @@ namespace TaskLog.Core.ViewModels
             }
 
             //Update the days (to display in the view)
-            var groupedByDay = workViewModels.GroupBy(x => x.Date.Date).OrderBy(x => x);
-            foreach (var dayGroup in groupedByDay)
-            {
-                var dayCollectionViewModel = new WorkDayViewModel();
-                dayCollectionViewModel.Date = dayGroup.Key;
-                dayCollectionViewModel.UpdateWorks(dayGroup);
-                Days.Add(dayCollectionViewModel);
+            var firstDay = workViewModels.OrderBy(x => x.Date).FirstOrDefault()?.Date ?? DateTime.Today;
+            var firstOfWeek = firstDay.StartOfWeek();
+            for (var i = 0; i < 5; i++) {
+                var worksOfThisDay = workViewModels.Where(x => x.Date.Equals(firstOfWeek.AddDays(i)));
+                if (worksOfThisDay.Any()) {
+                    var thisDay = worksOfThisDay.FirstOrDefault().Date;
+                    var dayViewModel = new WorkDayViewModel(thisDay);
+                    dayViewModel.UpdateWorks(worksOfThisDay);
+                    Days.Add(dayViewModel);
+                }
+                else {
+                    var dayViewModel = new WorkDayViewModel(firstOfWeek.AddDays(i));
+                    Days.Add(dayViewModel);
+                }
             }
-
-            var firstDay = groupedByDay.FirstOrDefault().Key;
-            var lastDay = groupedByDay.LastOrDefault().Key;
-            Header = $"{firstDay.ToShortDateString()} - {lastDay.ToShortDateString()}";
 
             //Notify hours changed for the week;
             RaisePropertyChanged(() => SumHours);
@@ -55,6 +62,9 @@ namespace TaskLog.Core.ViewModels
                 affectedDay.UpdateWorks(_works.Where(x => x.Date.Equals(affectedDay.Date)));
                 affectedDay.Date = affectedDay.Date;
             }
+            RaisePropertyChanged(() => SumHours);
+            RaisePropertyChanged(() => IsValidSumHours);
+            RaisePropertyChanged(() => Header);
         }
 
         private void HandleNotifyHoursChanged(WorkViewModel obj)

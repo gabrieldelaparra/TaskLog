@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.ComponentModel;
 using MvvmCross.Platforms.Wpf.Views;
+using TaskLog.Core.Models;
 using TaskLog.Core.ViewModels;
 
 namespace TaskLog.Wpf.Views
@@ -24,5 +15,24 @@ namespace TaskLog.Wpf.Views
         {
             InitializeComponent();
         }
+
+        public WorkDayViewModel DesignTimeViewModel { get; set; } = new WorkDayViewModel()
+        {
+            Date = DateTime.Today,
+            Works = {
+                new WorkViewModel {
+                    Date = DateTime.Today,
+                    WorkType = WorkType.Normal,
+                    Hours = 3,
+                    Details = "Work 1 Details",
+                },
+                new WorkViewModel {
+                    Date = DateTime.Today,
+                    WorkType = WorkType.Error,
+                    Hours = 4,
+                    Details = "Work 2 Details",
+                }
+            }
+        };
     }
 }

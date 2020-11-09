@@ -9,8 +9,15 @@ namespace TaskLog.Core.ViewModels
 {
     public class WorkDayViewModel : MvxViewModel, IWorkCollection
     {
-        private DateTime _date;
+        private DateTime _date = DateTime.Today;
 
+        public WorkDayViewModel() {
+            
+        }
+
+        public WorkDayViewModel(DateTime date) {
+            Date = date;
+        }
         public ObservableCollection<WorkViewModel> Works { get; private set; } = new ObservableCollection<WorkViewModel>();
         public DateTime Date
         {
@@ -19,10 +26,11 @@ namespace TaskLog.Core.ViewModels
             {
                 _date = value;
                 SetProperty(ref _date, value);
+                RaisePropertyChanged(() => Header);
             }
         }
-        public string TestString { get; set; } = "Test: WorkDayViewModel";
-        public string Header { get; set; }
+
+        public string Header => $"{Date.ToShortDateString()}: ({SumHours})";
         public void UpdateWorks(IEnumerable<WorkViewModel> workViewModels)
         {
             if (!workViewModels.Any())
@@ -34,11 +42,9 @@ namespace TaskLog.Core.ViewModels
                 Works.Add(work);
                 work.OnNotifyHoursChanged = HandleNotifyHoursChanged;
             }
-            Header = Date.ToShortDateString();
 
             RaisePropertyChanged(() => SumHours);
             RaisePropertyChanged(() => IsValidSumHours);
-            RaisePropertyChanged(() => Header);
         }
 
         private void HandleNotifyHoursChanged(WorkViewModel task)

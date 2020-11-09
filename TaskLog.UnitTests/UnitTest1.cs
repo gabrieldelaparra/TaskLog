@@ -40,7 +40,7 @@ namespace TaskLog.UnitTests
 
             var work1 = new Work()
             {
-                Date = DateTime.Today,
+                Date = DateTime.Today.StartOfWeek(),
                 Hours = 3.5,
                 Details = "Some description for my work 1",
                 ProjectId = project1.Id,
@@ -49,14 +49,50 @@ namespace TaskLog.UnitTests
             };
             var work2 = new Work()
             {
-                Date = DateTime.Today,
+                Date = DateTime.Today.StartOfWeek(),
                 Hours = 4.5,
                 Details = "Some description for my work 2",
                 ProjectId = project1.Id,
                 TaskId = task1.Id,
                 WorkType = WorkType.Error,
             };
-            dataLoaderService.SaveWorks(new[] { work1, work2 });
+            var work3 = new Work()
+            {
+                Date = DateTime.Today.StartOfWeek().AddDays(1),
+                Hours = 6,
+                Details = "Some description for my work 3",
+                ProjectId = project1.Id,
+                TaskId = task1.Id,
+                WorkType = WorkType.Normal,
+            };
+            var work4 = new Work()
+            {
+                Date = DateTime.Today.StartOfWeek().AddDays(3),
+                Hours = 4.5,
+                Details = "Some description for my work 4",
+                ProjectId = project1.Id,
+                TaskId = task1.Id,
+                WorkType = WorkType.Normal,
+            };
+            var work5 = new Work()
+            {
+                Date = DateTime.Today.StartOfWeek().AddDays(3),
+                Hours = 3.5,
+                Details = "Some description for my work 5",
+                ProjectId = project1.Id,
+                TaskId = task1.Id,
+                WorkType = WorkType.Tools,
+            };
+            var work6 = new Work()
+            {
+                Date = DateTime.Today.StartOfWeek().AddDays(4),
+                Hours = 8,
+                Details = "Some description for my work 6",
+                ProjectId = project1.Id,
+                TaskId = task1.Id,
+                WorkType = WorkType.Rework,
+            };
+            dataLoaderService.SaveWorks(new[] { work1, work2, work3, work4, work5, work6 });
             var dataService = Mvx.IoCProvider.Resolve<IDataService>();
             dataService.ReloadData();
         }
@@ -108,7 +144,7 @@ namespace TaskLog.UnitTests
             });
             jsonDataService.SaveTasks(tasks.Select(x => x.WriteToModel()));
             jsonDataService.SaveProjects(projects.Select(x => x.WriteToModel()));
-            jsonDataService.SaveWorks(works.Select(x=>x.WriteToModel()));
+            jsonDataService.SaveWorks(works.Select(x=>x.ToModel()));
         }
 
         [Fact]

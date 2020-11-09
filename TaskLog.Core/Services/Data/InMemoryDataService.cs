@@ -25,12 +25,10 @@ namespace TaskLog.Core.Services.Data
             var loadProjects = _dataLoaderService.LoadProjects();
             var loadTasks = _dataLoaderService.LoadTasks();
             var loadWorks = _dataLoaderService.LoadWorks();
-            if (loadProjects != null && loadProjects.Any())
-                _projects = loadProjects.ToDictionary(x => x.Id, x => x);
-            if (loadTasks != null && loadTasks.Any())
-                _tasks = loadTasks.ToDictionary(x => x.Id, x => x);
-            if (loadWorks != null && loadWorks.Any())
-                _works = loadWorks.ToDictionary(x => x.Id, x => x);
+
+            _projects = loadProjects.ToDictionary(x => x.Id, x => x);
+            _tasks = loadTasks.ToDictionary(x => x.Id, x => x);
+            _works = loadWorks.ToDictionary(x => x.Id, x => x);
         }
 
         public IEnumerable<ProjectViewModel> GetProjects()
@@ -85,7 +83,7 @@ namespace TaskLog.Core.Services.Data
 
         private void UpdateOrAddWork(WorkViewModel workViewModel)
         {
-            var model = workViewModel.WriteToModel();
+            var model = workViewModel.ToModel();
 
             if (_works.ContainsKey(model.Id))
                 _works[model.Id] = model;

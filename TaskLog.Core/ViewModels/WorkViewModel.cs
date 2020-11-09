@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using MvvmCross.ViewModels;
 using TaskLog.Core.Models;
 using TaskLog.Core.Utilities;
@@ -8,42 +7,45 @@ namespace TaskLog.Core.ViewModels
 {
     public class WorkViewModel : MvxViewModel
     {
-        public string TestString { get; set; } = "Test: WorkViewModel";
         public Guid Id { get; set; }
         private DateTime _date;
         private double _hours;
         private string _details;
-        private WorkType _taskInstanceType = WorkType.Normal;
+        private WorkType _workType = WorkType.Normal;
         private Work Work { get; }
+        private Task Task { get; set; }
+        private Project Project { get; set; }
 
         public WorkViewModel() { }
 
-        public WorkViewModel(Work work) {
+        public WorkViewModel(Work work)
+        {
             Work = work;
-            ReadFromModel(Work);
+            FromModel(Work);
         }
 
-        public string Header => Work.ToString();
+        public string Header => $"({Hours}) [{WorkType}] {Details}";
 
-        public void ReadFromModel(Work model)
+        private void FromModel(Work model)
         {
             Date = model.Date;
             Hours = model.Hours;
             Details = model.Details;
-            TaskInstanceType = model.WorkType;
+            WorkType = model.WorkType;
         }
 
-        public Work WriteToModel()
+        public Work ToModel()
         {
             Work.Hours = Hours;
             Work.Date = Date;
             Work.Details = Details;
-            Work.WorkType = TaskInstanceType;
+            Work.WorkType = WorkType;
             return Work;
         }
 
-        public void CycleTaskInstanceType() {
-            TaskInstanceType = TaskInstanceType.Cycle();
+        public void CycleTaskInstanceType()
+        {
+            WorkType = WorkType.Cycle();
         }
 
         public Action<WorkViewModel, DateTime, DateTime> OnNotifyDateChanged { get; set; }
@@ -54,7 +56,8 @@ namespace TaskLog.Core.ViewModels
         public DateTime Date
         {
             get => _date;
-            set {
+            set
+            {
                 var oldDate = _date;
                 var newDate = value;
                 _date = value;
@@ -85,16 +88,16 @@ namespace TaskLog.Core.ViewModels
             }
         }
 
-        public WorkType TaskInstanceType
+        public WorkType WorkType
         {
-            get => _taskInstanceType;
+            get => _workType;
             set
             {
-                _taskInstanceType = value;
-                SetProperty(ref _taskInstanceType, value);
+                _workType = value;
+                SetProperty(ref _workType, value);
                 OnNotifyTaskInstanceTypeChanged?.Invoke(this);
             }
         }
-       
+
     }
 }
