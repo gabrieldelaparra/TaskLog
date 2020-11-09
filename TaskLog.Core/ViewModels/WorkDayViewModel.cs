@@ -40,14 +40,14 @@ namespace TaskLog.Core.ViewModels
             foreach (var work in workViewModels)
             {
                 Works.Add(work);
-                work.OnNotifyHoursChanged = HandleNotifyHoursChanged;
+                work.OnHoursChanged = HandleHoursChanged;
             }
 
             RaisePropertyChanged(() => SumHours);
             RaisePropertyChanged(() => IsValidSumHours);
         }
 
-        private void HandleNotifyHoursChanged(WorkViewModel task)
+        private void HandleHoursChanged(WorkViewModel task)
         {
             RaisePropertyChanged(() => SumHours);
             RaisePropertyChanged(() => IsValidSumHours);

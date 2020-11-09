@@ -27,8 +27,8 @@ namespace TaskLog.Core.ViewModels
             foreach (var workViewModel in workViewModels)
             {
                 _works.Add(workViewModel);
-                workViewModel.OnNotifyHoursChanged = HandleNotifyHoursChanged;
-                workViewModel.OnNotifyDateChanged = HandleNotifyDateChanged;
+                workViewModel.OnHoursChanged = HandleHoursChanged;
+                workViewModel.OnDateChanged = HandleDateChanged;
             }
 
             //Update the days (to display in the view)
@@ -54,7 +54,7 @@ namespace TaskLog.Core.ViewModels
             RaisePropertyChanged(() => Header);
         }
 
-        private void HandleNotifyDateChanged(WorkViewModel task, DateTime oldDate, DateTime newDate)
+        private void HandleDateChanged(WorkViewModel task, DateTime oldDate, DateTime newDate)
         {
             //Filter and update oldDate and newDate Days (if available);
             var affectedDays = Days.Where(x => x.Date.Equals(oldDate) || x.Date.Equals(newDate));
@@ -67,7 +67,7 @@ namespace TaskLog.Core.ViewModels
             RaisePropertyChanged(() => Header);
         }
 
-        private void HandleNotifyHoursChanged(WorkViewModel obj)
+        private void HandleHoursChanged(WorkViewModel obj)
         {
             RaisePropertyChanged(() => SumHours);
             RaisePropertyChanged(() => IsValidSumHours);

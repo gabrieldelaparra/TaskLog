@@ -21,8 +21,7 @@ namespace TaskLog.Core.ViewModels
             set
             {
                 _activeViewModel = value;
-                //SetProperty(ref _activeViewModel, value);
-                RaisePropertyChanged(() => ActiveViewModel);
+                SetProperty(ref _activeViewModel, value);
             }
         }
 
@@ -32,12 +31,11 @@ namespace TaskLog.Core.ViewModels
         {
             _dataService = dataService;
             _navigationService = navigationService;
+            _mvxNavigationService = mvxNavigationService;
 
             // TODO: Not sure about what is a better architecture. Check if this should be here or in parent (HomeViewModel). 
             _navigationService.OnNavigationDateChange = HandleNavigationDateChange;
             _navigationService.OnNavigationTypeChange = HandleNavigationTypeChange;
-
-            _mvxNavigationService = mvxNavigationService;
 
             ReloadWorks();
         }

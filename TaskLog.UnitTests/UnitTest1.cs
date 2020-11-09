@@ -142,8 +142,8 @@ namespace TaskLog.UnitTests
                 TasksFilename = @"..\..\..\..\TaskLog.Wpf\bin\Debug\netcoreapp3.1\Tasks.json",
                 WorksFilename = @"..\..\..\..\TaskLog.Wpf\bin\Debug\netcoreapp3.1\Works.json",
             });
-            jsonDataService.SaveTasks(tasks.Select(x => x.WriteToModel()));
-            jsonDataService.SaveProjects(projects.Select(x => x.WriteToModel()));
+            jsonDataService.SaveTasks(tasks.Select(x => x.ToModel()));
+            jsonDataService.SaveProjects(projects.Select(x => x.ToModel()));
             jsonDataService.SaveWorks(works.Select(x=>x.ToModel()));
         }
 
@@ -151,11 +151,11 @@ namespace TaskLog.UnitTests
         public void TestActionNotifies()
         {
             var vm = new WorkViewModel();
-            vm.OnNotifyDateChanged = NotifyDateChanged;
+            vm.OnDateChanged = HandleDateChanged;
             vm.Date = DateTime.Now.Date;
         }
 
-        private void NotifyDateChanged(WorkViewModel obj, DateTime arg2, DateTime arg3) {
+        private void HandleDateChanged(WorkViewModel obj, DateTime arg2, DateTime arg3) {
             Console.WriteLine($"Date changed: {obj.Date}");
         }
 

@@ -1,6 +1,8 @@
 ﻿using System;
+using MvvmCross;
 using MvvmCross.ViewModels;
 using TaskLog.Core.Models;
+using TaskLog.Core.Services.Data;
 using TaskLog.Core.Utilities;
 
 namespace TaskLog.Core.ViewModels
@@ -13,8 +15,8 @@ namespace TaskLog.Core.ViewModels
         private string _details;
         private WorkType _workType = WorkType.Normal;
         private Work Work { get; }
-        private Task Task { get; set; }
-        private Project Project { get; set; }
+        private TaskViewModel Task { get; set; }
+        private ProjectViewModel Project { get; set; }
 
         public WorkViewModel() { }
 
@@ -23,11 +25,13 @@ namespace TaskLog.Core.ViewModels
             Work = work;
             FromModel(Work);
         }
-
         public string Header => $"({Hours}) [{WorkType}] {Details}";
 
         private void FromModel(Work model)
         {
+            var dataService = Mvx.IoCProvider.Resolve<IDataService>();
+            Project = dataService.GetProjectById(model.ProjectId);
+            Task = dataService.GetTaskById(model.Id);
             Date = model.Date;
             Hours = model.Hours;
             Details = model.Details;
@@ -40,6 +44,8 @@ namespace TaskLog.Core.ViewModels
             Work.Date = Date;
             Work.Details = Details;
             Work.WorkType = WorkType;
+            Work.ProjectId = Project.Id;
+            Work.TaskId = Task.Id;
             return Work;
         }
 
@@ -48,10 +54,10 @@ namespace TaskLog.Core.ViewModels
             WorkType = WorkType.Cycle();
         }
 
-        public Action<WorkViewModel, DateTime, DateTime> OnNotifyDateChanged { get; set; }
-        public Action<WorkViewModel> OnNotifyHoursChanged { get; set; }
-        public Action<WorkViewModel> OnNotifyTaskInstanceTypeChanged { get; set; }
-        public Action<WorkViewModel> OnNotifyDetailsProjectChanged { get; set; }
+        public Action<WorkViewModel, DateTime, DateTime> OnDateChanged { get; set; }
+        public Action<WorkViewModel> OnHoursChanged { get; set; }
+        public Action<WorkViewModel> OnTaskInstanceTypeChanged { get; set; }
+        public Action<WorkViewModel> OnDetailsProjectChanged { get; set; }
 
         public DateTime Date
         {
@@ -62,7 +68,7 @@ namespace TaskLog.Core.ViewModels
                 var newDate = value;
                 _date = value;
                 SetProperty(ref _date, value);
-                OnNotifyDateChanged?.Invoke(this, oldDate, newDate);
+                OnDateChanged?.Invoke(this, oldDate, newDate);
             }
         }
 
@@ -73,7 +79,7 @@ namespace TaskLog.Core.ViewModels
             {
                 _hours = value;
                 SetProperty(ref _hours, value);
-                OnNotifyHoursChanged?.Invoke(this);
+                OnHoursChanged?.Invoke(this);
             }
         }
 
@@ -84,7 +90,7 @@ namespace TaskLog.Core.ViewModels
             {
                 _details = value;
                 SetProperty(ref _details, value);
-                OnNotifyDetailsProjectChanged?.Invoke(this);
+                OnDetailsProjectChanged?.Invoke(this);
             }
         }
 
@@ -95,7 +101,7 @@ namespace TaskLog.Core.ViewModels
             {
                 _workType = value;
                 SetProperty(ref _workType, value);
-                OnNotifyTaskInstanceTypeChanged?.Invoke(this);
+                OnTaskInstanceTypeChanged?.Invoke(this);
             }
         }
 
