@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace TaskLog.Core.Models
 {
@@ -14,8 +12,6 @@ namespace TaskLog.Core.Models
         public string Code { get; set; }
         public Guid Id { get; }
         public ProjectType ProjectType { get; set; } = ProjectType.CustomerProject;
-        //public IList<Guid> WorkIds { get; set; } = new List<Guid>();
-        //public IEnumerable<Guid> Works => TaskIds.SelectMany(x => x.WorkIds);
         public override string ToString() => $"({Code}) {Name}: {Description}";
     }
 }
