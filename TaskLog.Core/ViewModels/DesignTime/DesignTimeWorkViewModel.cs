@@ -13,7 +13,7 @@ namespace TaskLog.Core.ViewModels.DesignTime
         {
             Details = $"Random Task Details {Random.Next(1, 100)}",
             Date = date,
-            Hours = (Random.Next(0, 16) * .5) / 2,
+            Hours = (Random.Next(2, 16) * .5) / 2,
             WorkType = (WorkType)Random.Next(0, 5),
         })
         { }

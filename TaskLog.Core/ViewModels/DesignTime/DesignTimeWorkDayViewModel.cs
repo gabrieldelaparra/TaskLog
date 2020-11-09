@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using TaskLog.Core.Models;
 
 namespace TaskLog.Core.ViewModels.DesignTime
 {
