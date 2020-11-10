@@ -24,16 +24,17 @@ namespace TaskLog.UnitTests
             var project1 = new Project
             {
                 ProjectType = ProjectType.CustomerProject,
-                Code = "23027",
-                Description = "Mekele Dallol project description",
-                Name = "Mekele Dallol",
+                Code = "23027-A",
+                Description = "Mekele/Dallol: Mekele Station",
+                Name = "Mekele/Dallol: Mekele",
             };
             dataLoaderService.SaveProjects(new []{project1});
 
             var task1 = new Task
             {
-                Description = "HW Engineering",
-                Name = "23027-A-21600-210",
+                Description = "HW Engineering Task description",
+                Name = "HW Engineering",
+                Code = "21600-210",
                 ProjectId = project1.Id,
             };
             dataLoaderService.SaveTasks(new[] { task1 });
@@ -58,7 +59,7 @@ namespace TaskLog.UnitTests
             };
             var work3 = new Work()
             {
-                Date = DateTime.Today.StartOfWeek().AddDays(1),
+                Date = DateTime.Today.StartOfWeek().AddDays(4),
                 Hours = 6,
                 Details = "Some description for my work 3",
                 ProjectId = project1.Id,
@@ -85,7 +86,7 @@ namespace TaskLog.UnitTests
             };
             var work6 = new Work()
             {
-                Date = DateTime.Today.StartOfWeek().AddDays(4),
+                Date = DateTime.Today.StartOfWeek().AddDays(1),
                 Hours = 8,
                 Details = "Some description for my work 6",
                 ProjectId = project1.Id,
