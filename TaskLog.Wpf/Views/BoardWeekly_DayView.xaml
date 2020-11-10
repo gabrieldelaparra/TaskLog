@@ -36,5 +36,7 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
     </Grid>
+
 </views:MvxWpfView>
