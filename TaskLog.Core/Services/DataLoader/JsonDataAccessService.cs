@@ -5,11 +5,11 @@ using TaskLog.Core.Models;
 
 namespace TaskLog.Core.Services.DataLoader
 {
-    public class JsonDataLoaderService : IDataLoaderService
+    public class JsonDataAccessService : IDataAccessService
     {
         private readonly IFileConfiguration _fileConfiguration;
 
-        public JsonDataLoaderService(IFileConfiguration fileConfiguration) {
+        public JsonDataAccessService(IFileConfiguration fileConfiguration) {
             _fileConfiguration = fileConfiguration;
         }
 

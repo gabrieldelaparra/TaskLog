@@ -13,7 +13,7 @@ namespace TaskLog.Core
         public override void Initialize()
         {
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IFileConfiguration, JsonFileConfiguration>();
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDataLoaderService, JsonDataLoaderService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDataAccessService, JsonDataAccessService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDataService, InMemoryDataService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<INavigationService, NavigationService>();
             // I think that singletons would do for both the Navigation and DataDisplay

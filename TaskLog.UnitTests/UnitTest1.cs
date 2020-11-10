@@ -17,10 +17,10 @@ namespace TaskLog.UnitTests
     {
         protected override void AdditionalSetup()
         {
-            Ioc.ConstructAndRegisterSingleton<IDataLoaderService, CodeBasedDataLoaderService>();
+            Ioc.ConstructAndRegisterSingleton<IDataAccessService, CodeBasedDataAccessService>();
             Ioc.ConstructAndRegisterSingleton<IDataService, InMemoryDataService>();
 
-            var dataLoaderService = Mvx.IoCProvider.Resolve<IDataLoaderService>();
+            var dataLoaderService = Mvx.IoCProvider.Resolve<IDataAccessService>();
             var project1 = new Project
             {
                 ProjectType = ProjectType.CustomerProject,
@@ -138,14 +138,14 @@ namespace TaskLog.UnitTests
             var tasks = dataService.GetTasks();
             var works = dataService.GetWeekWorks(DateTime.Today);
 
-            var jsonDataService = new JsonDataLoaderService(new JsonFileConfiguration() {
+            var jsonDataService = new JsonDataAccessService(new JsonFileConfiguration() {
                 ProjectsFilename = @"..\..\..\..\TaskLog.Wpf\bin\Debug\netcoreapp3.1\Projects.json",
                 TasksFilename = @"..\..\..\..\TaskLog.Wpf\bin\Debug\netcoreapp3.1\Tasks.json",
                 WorksFilename = @"..\..\..\..\TaskLog.Wpf\bin\Debug\netcoreapp3.1\Works.json",
             });
-            jsonDataService.SaveTasks(tasks.Select(x => x.ToModel()));
-            jsonDataService.SaveProjects(projects.Select(x => x.ToModel()));
-            jsonDataService.SaveWorks(works.Select(x=>x.ToModel()));
+            jsonDataService.SaveTasks(tasks);
+            jsonDataService.SaveProjects(projects);
+            jsonDataService.SaveWorks(works);
         }
 
         [Fact]

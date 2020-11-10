@@ -4,91 +4,89 @@ using System.Linq;
 using TaskLog.Core.Models;
 using TaskLog.Core.Services.DataLoader;
 using TaskLog.Core.Utilities;
-using TaskLog.Core.ViewModels;
 
 namespace TaskLog.Core.Services.Data
 {
     public class InMemoryDataService : IDataService
     {
-        private readonly IDataLoaderService _dataLoaderService;
+        private readonly IDataAccessService _dataAccessService;
         private Dictionary<Guid, Project> _projects = new Dictionary<Guid, Project>();
         private Dictionary<Guid, Task> _tasks = new Dictionary<Guid, Task>();
         private Dictionary<Guid, Work> _works = new Dictionary<Guid, Work>();
-        public InMemoryDataService(IDataLoaderService dataLoaderService)
+        public InMemoryDataService(IDataAccessService dataAccessService)
         {
-            _dataLoaderService = dataLoaderService;
+            _dataAccessService = dataAccessService;
             ReloadData();
         }
 
         public void ReloadData()
         {
-            var loadProjects = _dataLoaderService.LoadProjects();
-            var loadTasks = _dataLoaderService.LoadTasks();
-            var loadWorks = _dataLoaderService.LoadWorks();
+            var loadProjects = _dataAccessService.LoadProjects();
+            var loadTasks = _dataAccessService.LoadTasks();
+            var loadWorks = _dataAccessService.LoadWorks();
 
             _projects = loadProjects.ToDictionary(x => x.Id, x => x);
             _tasks = loadTasks.ToDictionary(x => x.Id, x => x);
             _works = loadWorks.ToDictionary(x => x.Id, x => x);
         }
 
-        public IEnumerable<ProjectViewModel> GetProjects()
+        public IEnumerable<Project> GetProjects()
         {
-            return _projects.Select(x => new ProjectViewModel(x.Value)).ToList();
+            return _projects.Select(x => x.Value);
         }
 
-        public IEnumerable<TaskViewModel> GetTasks()
+        public IEnumerable<Task> GetTasks()
         {
-            return _tasks.Select(x => new TaskViewModel(x.Value)).ToList();
+            return _tasks.Select(x => x.Value);
         }
 
-        public IEnumerable<WorkViewModel> GetWeekWorks(DateTime date)
+        public IEnumerable<Work> GetWeekWorks(DateTime date)
         {
             var calendarWeek = date.GetCalendarWeek();
             var works = _works.Where(x => x.Value.Date.GetCalendarWeek().Equals(calendarWeek));
-            return works.Select(x => new WorkViewModel(x.Value)).ToList();
+            return works.Select(x => x.Value);
         }
 
-        public IEnumerable<WorkViewModel> GetMonthWorks(DateTime date)
+        public IEnumerable<Work> GetMonthWorks(DateTime date)
         {
             var works = _works.Select(x => x.Value).Where(x => x.Date.Month.Equals(date.Month));
-            return works.Select(taskInstance => new WorkViewModel(taskInstance)).ToList();
+            return works;
         }
 
-        public void SetWorks(IEnumerable<WorkViewModel> workViewModels)
+        public void SetWorks(IEnumerable<Work> works)
         {
-            foreach (var taskInstanceViewModel in workViewModels)
-                UpdateOrAddWork(taskInstanceViewModel);
+            foreach (var taskInstanceViewModel in works)
+                AddOrUpdateWork(taskInstanceViewModel);
         }
 
-        public ProjectViewModel GetProjectById(Guid id)
-        {
+        //TODO: SetTasks
+        //TODO: SetProjects
+        //TODO: Save using IDataLoaderService
+
+        public Project GetProjectById(Guid id) {
             if (_projects.ContainsKey(id))
-                return new ProjectViewModel(_projects[id]);
+                return _projects[id];
             throw new Exception($"Project not found: {id}");
         }
 
-        public TaskViewModel GetTaskById(Guid id)
-        {
+        public Task GetTaskById(Guid id) {
             if (_tasks.ContainsKey(id))
-                return new TaskViewModel(_tasks[id]);
+                return _tasks[id];
             throw new Exception($"Task not found: {id}");
         }
 
-        public WorkViewModel GetWorkById(Guid id)
-        {
+        public Work GetWorkById(Guid id) {
             if (_works.ContainsKey(id))
-                return new WorkViewModel(_works[id]);
+                return _works[id];
             throw new Exception($"Work not found: {id}");
         }
 
-        private void UpdateOrAddWork(WorkViewModel workViewModel)
+        public void AddOrUpdateWork(Work work)
         {
-            var model = workViewModel.ToModel();
-
-            if (_works.ContainsKey(model.Id))
-                _works[model.Id] = model;
+            if (_works.ContainsKey(work.Id))
+                _works[work.Id] = work;
             else
-                _works.Add(model.Id, model);
+                _works.Add(work.Id, work);
         }
     }
 }

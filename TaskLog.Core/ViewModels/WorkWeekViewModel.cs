@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using MvvmCross.ViewModels;
+using TaskLog.Core.Models;
 using TaskLog.Core.Utilities;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class WorkWeekViewModel: MvxViewModel, IWorkCollection
+    public class WorkWeekViewModel: MvxViewModel
     {
         private readonly IList<WorkViewModel> _works = new List<WorkViewModel>();
         public ObservableCollection<WorkDayViewModel> Days { get; private set; } = new ObservableCollection<WorkDayViewModel>();
@@ -15,9 +16,6 @@ namespace TaskLog.Core.ViewModels
         private DateTime LastDay => FirstDay.AddDays(4);
         public string Header => $"{FirstDay.ToShortDateString()} - {LastDay.ToShortDateString()}: ({SumHours})";
         public void UpdateWorks(IEnumerable<WorkViewModel> workViewModels) {
-            ////If no items are give, then do nothing
-            //if (!workViewModels.Any()) 
-            //    return;
 
             //Clear the collection
             Days.Clear();
@@ -32,10 +30,10 @@ namespace TaskLog.Core.ViewModels
             }
 
             //Update the days (to display in the view)
-            var firstDay = workViewModels.OrderBy(x => x.Date).FirstOrDefault()?.Date ?? DateTime.Today;
+            var firstDay = _works.OrderBy(x => x.Date).FirstOrDefault()?.Date ?? DateTime.Today;
             var firstOfWeek = firstDay.StartOfWeek();
             for (var i = 0; i < 5; i++) {
-                var worksOfThisDay = workViewModels.Where(x => x.Date.Equals(firstOfWeek.AddDays(i)));
+                var worksOfThisDay = _works.Where(x => x.Date.Equals(firstOfWeek.AddDays(i)));
                 if (worksOfThisDay.Any()) {
                     var thisDay = worksOfThisDay.FirstOrDefault().Date;
                     var dayViewModel = new WorkDayViewModel(thisDay);
