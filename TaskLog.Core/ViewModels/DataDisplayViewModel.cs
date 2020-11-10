@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MvvmCross;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -57,13 +58,13 @@ namespace TaskLog.Core.ViewModels
                 case NavigationType.Week:
                     {
                         var works = _dataService.GetWeekWorks(_navigationService.NavigationDate);
-                        ActivateWeekViewModel(works);
+                        ActivateWeekViewModel(works.Select(x=>new WorkViewModel(x)));
                         break;
                     }
                 case NavigationType.Month:
                     {
                         var works = _dataService.GetMonthWorks(_navigationService.NavigationDate);
-                        ActivateMonthViewModel(works);
+                        ActivateMonthViewModel(works.Select(x => new WorkViewModel(x)));
                         break;
                     }
                 default:

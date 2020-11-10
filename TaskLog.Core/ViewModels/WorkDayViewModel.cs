@@ -4,10 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 using MvvmCross.ViewModels;
+using TaskLog.Core.Models;
 
 namespace TaskLog.Core.ViewModels
 {
-    public class WorkDayViewModel : MvxViewModel, IWorkCollection
+    public class WorkDayViewModel : MvxViewModel
     {
         private DateTime _date = DateTime.Today;
 
@@ -33,14 +34,11 @@ namespace TaskLog.Core.ViewModels
         public string Header => $"{Date.ToShortDateString()}: ({SumHours})";
         public void UpdateWorks(IEnumerable<WorkViewModel> workViewModels)
         {
-            if (!workViewModels.Any())
-                return;
-
             Works.Clear();
-            foreach (var work in workViewModels)
+            foreach (var workViewModel in workViewModels)
             {
-                Works.Add(work);
-                work.OnHoursChanged = HandleHoursChanged;
+                Works.Add(workViewModel);
+                workViewModel.OnHoursChanged = HandleHoursChanged;
             }
 
             RaisePropertyChanged(() => SumHours);

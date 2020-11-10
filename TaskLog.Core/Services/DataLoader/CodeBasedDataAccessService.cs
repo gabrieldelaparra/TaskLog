@@ -3,7 +3,7 @@ using TaskLog.Core.Models;
 
 namespace TaskLog.Core.Services.DataLoader
 {
-    public class CodeBasedDataLoaderService : IDataLoaderService
+    public class CodeBasedDataAccessService : IDataAccessService
     {
         private IEnumerable<Project> _projects = new List<Project>();
         private IEnumerable<Task> _tasks = new List<Task>();

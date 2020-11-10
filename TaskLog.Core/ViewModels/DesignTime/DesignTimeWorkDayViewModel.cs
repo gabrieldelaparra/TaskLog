@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TaskLog.Core.ViewModels.DesignTime
 {
@@ -12,11 +13,12 @@ namespace TaskLog.Core.ViewModels.DesignTime
         public DesignTimeWorkDayViewModel(DateTime date)
         {
             Date = date;
-            var works = new List<DesignTimeWorkViewModel>();
-            for (var i = 0; i < _random.Next(0, 4); i++) {
-                works.Add(new DesignTimeWorkViewModel(date));
+            var designTimeWorkViewModels = new List<DesignTimeWorkViewModel>();
+            for (var i = 0; i < _random.Next(0, 4); i++)
+            {
+                designTimeWorkViewModels.Add(new DesignTimeWorkViewModel(date));
             }
-            UpdateWorks(works);
+            UpdateWorks(designTimeWorkViewModels);
         }
     }
 }
