@@ -26,8 +26,6 @@ namespace TaskLog.Core.ViewModels
             }
         }
 
-        public string TestString { get; set; } = "Test: DataDisplayViewModel";
-
         public DataDisplayViewModel(IDataService dataService, INavigationService navigationService, IMvxNavigationService mvxNavigationService)
         {
             _dataService = dataService;
