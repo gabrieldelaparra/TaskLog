@@ -1,0 +1,45 @@
+﻿<h3>ProjectList</h3>
+
+@if (Projects != null)
+{
+    <table class="table  table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <Virtualize Context="project" Items="@Projects">
+                <tr>
+                    <td>@project.Code</td>
+                    <td>@project.Name</td>
+                    <td>@project.Description</td>
+                </tr>
+            </Virtualize>
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<Project> Projects { get; set; } = new List<Project>();
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        for (var i = 0; i < 50; i++)
+        {
+            Projects.Add(new Project
+            {
+                Code = $"230{i:00}",
+                Description = $"Description for Project {i:00}",
+                Name = $"Project {i:00} Name"
+            });
+        }
+    }
+
+
+
+}
