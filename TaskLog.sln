@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskLog.Core", "TaskLog.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskLog.UnitTests", "TaskLog.UnitTests\TaskLog.UnitTests.csproj", "{3DE53845-0A22-45C6-A9F4-521EBDC06972}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskLog.Wpf", "TaskLog.Wpf\TaskLog.Wpf.csproj", "{36B373F9-C917-4C60-A49D-946D50F96B76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskLog.Wpf", "TaskLog.Wpf\TaskLog.Wpf.csproj", "{36B373F9-C917-4C60-A49D-946D50F96B76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskLog.Collapp", "TaskLog.Collapp\TaskLog.Collapp.csproj", "{3600E06E-D5FF-4527-ACF2-BB8AA9897069}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{36B373F9-C917-4C60-A49D-946D50F96B76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36B373F9-C917-4C60-A49D-946D50F96B76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36B373F9-C917-4C60-A49D-946D50F96B76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3600E06E-D5FF-4527-ACF2-BB8AA9897069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3600E06E-D5FF-4527-ACF2-BB8AA9897069}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3600E06E-D5FF-4527-ACF2-BB8AA9897069}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3600E06E-D5FF-4527-ACF2-BB8AA9897069}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
